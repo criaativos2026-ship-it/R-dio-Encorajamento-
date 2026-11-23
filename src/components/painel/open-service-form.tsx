@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { Clock } from "lucide-react";
 import { openService } from "@/app/actions/service";
 import { Field, FormError } from "@/components/form";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,7 +10,7 @@ import { NativeSelect } from "@/components/ui/native-select";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { FUNCOES } from "@/lib/constants";
 
-export function OpenServiceForm({ today, defaultFunction }: { today: string; defaultFunction: string }) {
+export function OpenServiceForm({ nowLabel, defaultFunction }: { nowLabel: string; defaultFunction: string }) {
   const [state, action] = useActionState(openService, undefined);
   return (
     <Card className="border-0">
@@ -22,13 +23,13 @@ export function OpenServiceForm({ today, defaultFunction }: { today: string; def
           <Field label="Culto" htmlFor="title">
             <Input id="title" name="title" defaultValue="Culto" required maxLength={80} />
           </Field>
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Data" htmlFor="date">
-              <Input id="date" name="date" type="date" defaultValue={today} required />
-            </Field>
-            <Field label="Horário" htmlFor="time">
-              <Input id="time" name="time" type="time" />
-            </Field>
+          <div className="flex items-start gap-3 rounded-xl bg-muted px-4 py-3">
+            <Clock className="mt-0.5 size-4 shrink-0 text-ink-50" />
+            <p className="text-[13px] leading-relaxed text-muted-foreground">
+              <strong className="text-ink">{nowLabel}</strong>
+              <br />
+              Data e horário são registrados automaticamente pelo sistema no momento da abertura.
+            </p>
           </div>
           <Field label="Sua função" htmlFor="function">
             <NativeSelect id="function" name="function" defaultValue={defaultFunction}>

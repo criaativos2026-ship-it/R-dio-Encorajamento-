@@ -43,7 +43,7 @@ export default async function RelatorioCulto({ params }: { params: Promise<{ id:
       <section className="rounded-2xl bg-night p-6 text-white sm:p-8">
         <p className="font-mono text-xs font-semibold tracking-[0.12em] text-white/60 uppercase sm:tracking-eyebrow">
           {serviceDate(r.date)}
-          {r.time ? ` · ${r.time.replace(":", "h")}` : ""}
+          {r.time ? ` · aberto às ${r.time.replace(":", "h")}` : ""}
         </p>
         <h2 className="mt-3 text-[34px] leading-tight font-black tracking-display sm:text-5xl">{r.title}</h2>
         <p className="mt-3 text-sm text-white/60">

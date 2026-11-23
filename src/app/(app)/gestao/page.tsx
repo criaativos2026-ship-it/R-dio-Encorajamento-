@@ -71,7 +71,7 @@ export default async function GestaoOverview() {
                     </p>
                     <p className="mt-1 text-[13px] text-ink-50">
                       {serviceDate(c.date)}
-                      {c.time ? `, ${c.time.replace(":", "h")}` : ""} · {c.roster} na escala
+                      {c.time ? `, aberto às ${c.time.replace(":", "h")}` : ""} · {c.roster} na escala
                       {c.totalProblems > 0 && ` · ${c.totalProblems} problema${c.totalProblems > 1 ? "s" : ""}${c.openProblems ? ` (${c.openProblems} aberto${c.openProblems > 1 ? "s" : ""})` : ""}`}
                     </p>
                   </div>

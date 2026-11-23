@@ -7,29 +7,34 @@ import { db } from "@/db";
 import { assignments, services } from "@/db/schema";
 import { logActivity } from "@/lib/activity";
 import { FUNCOES } from "@/lib/constants";
-import { serviceDate } from "@/lib/format";
+import { clockNow, serviceDate, todayISO } from "@/lib/format";
 import { getActiveService } from "@/lib/queries";
 import { requireGestao, requireUser } from "@/lib/session";
 import type { FormState } from "./types";
 
 const openSchema = z.object({
   title: z.string().trim().min(2, "Informe o nome do culto.").max(80),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Data inválida."),
-  time: z.union([z.literal(""), z.string().regex(/^\d{2}:\d{2}$/, "Horário inválido.")]),
   function: z.enum(FUNCOES),
 });
 
-/** Abre um culto. Qualquer voluntário pode abrir, para a equipe não depender de uma pessoa só. */
+/**
+ * Abre um culto. Qualquer voluntário pode abrir, para a equipe não depender de uma pessoa só.
+ * Data e horário vêm do relógio do servidor (fuso de São Carlos): não podem ser escolhidos
+ * nem alterados pelo aparelho de quem abre.
+ */
 export async function openService(_: FormState, form: FormData): Promise<FormState> {
   const user = await requireUser();
   const parsed = openSchema.safeParse(Object.fromEntries(form));
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   if (await getActiveService()) return { error: "Já existe um culto aberto. Encerre-o antes de abrir outro." };
 
-  const { title, date, time } = parsed.data;
-  const [service] = await db.insert(services).values({ title, date, time: time || null, createdBy: user.id }).returning();
+  const { title } = parsed.data;
+  const now = new Date();
+  const date = todayISO(now);
+  const time = clockNow(now);
+  const [service] = await db.insert(services).values({ title, date, time, createdBy: user.id }).returning();
   await db.insert(assignments).values({ serviceId: service.id, userId: user.id, function: parsed.data.function });
-  await logActivity("culto", `Abriu o culto: ${title} (${serviceDate(date)}${time ? `, ${time.replace(":", "h")}` : ""})`, user.id, service.id);
+  await logActivity("culto", `Abriu o culto: ${title} (${serviceDate(date)}, às ${time.replace(":", "h")})`, user.id, service.id);
   revalidatePath("/", "layout");
 }
 

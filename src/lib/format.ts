@@ -9,6 +9,11 @@ export function todayISO(now = new Date()) {
   return `${y}-${m}-${d}`;
 }
 
+/** Hora atual (HH:MM) no fuso de São Carlos — sempre do servidor, nunca do aparelho. */
+export function clockNow(now = new Date()) {
+  return fmt({ hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(now);
+}
+
 export function hourNow(now = new Date()) {
   return Number(fmt({ hour: "2-digit", hourCycle: "h23" }).format(now));
 }

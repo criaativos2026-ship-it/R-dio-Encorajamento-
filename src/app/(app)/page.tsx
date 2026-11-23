@@ -11,7 +11,7 @@ import { Panel, PanelHeader } from "@/components/panel";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { FUNCOES, SEVERIDADE } from "@/lib/constants";
-import { firstName, greeting, initials, serviceDate, todayISO, when } from "@/lib/format";
+import { clockNow, firstName, greeting, initials, serviceDate, todayISO, when } from "@/lib/format";
 import { getActiveService, getActivities, getNotices, getProblems, getProgress, getRoster } from "@/lib/queries";
 import { isGestao, requireUser } from "@/lib/session";
 
@@ -53,7 +53,7 @@ export default async function Painel() {
       <section className="bg-night text-white">
         <div className="mx-auto grid max-w-[1200px] gap-8 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
-            <Eyebrow light>{service ? `${serviceDate(service.date)} · ${service.title}${service.time ? ` ${service.time.replace(":", "h")}` : ""}` : serviceDate(todayISO())}</Eyebrow>
+            <Eyebrow light>{service ? `${serviceDate(service.date)} · ${service.title}${service.time ? ` · aberto às ${service.time.replace(":", "h")}` : ""}` : serviceDate(todayISO())}</Eyebrow>
             <h1 className="mt-5 text-[44px] leading-[1.02] font-black tracking-display sm:text-[64px]">
               {greeting()},
               <br />
@@ -80,7 +80,7 @@ export default async function Painel() {
             </div>
           ) : (
             <div className="w-full lg:w-[380px]">
-              <OpenServiceForm today={todayISO()} defaultFunction={defaultFunction} />
+              <OpenServiceForm nowLabel={`${serviceDate(todayISO())}, ${clockNow().replace(":", "h")}`} defaultFunction={defaultFunction} />
             </div>
           )}
         </div>
