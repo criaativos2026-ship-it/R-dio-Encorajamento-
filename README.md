@@ -45,8 +45,7 @@ Requisitos: Node.js 20+ e PostgreSQL 14+.
 ```bash
 npm install
 cp .env.example .env.local      # preencha DATABASE_URL e AUTH_SECRET
-npm run db:migrate              # cria as tabelas
-npm run db:seed                 # cria os itens dos checklists (só se estiver vazio)
+npm run db:migrate              # cria as tabelas e os itens iniciais dos checklists
 npm run dev                     # http://localhost:3000
 ```
 
@@ -57,7 +56,6 @@ No primeiro acesso, o app abre `/configurar` para criar a conta da coordenação
 ```bash
 npm ci
 npm run db:migrate
-npm run db:seed
 npm run build
 npm run start                   # porta 3000 (use PORT=xxxx para mudar)
 ```
@@ -67,16 +65,17 @@ npm run start                   # porta 3000 (use PORT=xxxx para mudar)
 - Use **HTTPS**. O app pode ser instalado na tela inicial do celular (PWA).
 - Funciona em qualquer hospedagem Node.js com PostgreSQL (servidor próprio com Docker, Vercel + Neon/Supabase etc.).
 
-### Link para avaliação (Vercel + Neon)
+### Netlify (link de avaliação)
 
-Passo a passo em [`docs/PUBLICAR-VERCEL.md`](docs/PUBLICAR-VERCEL.md). O script `vercel-build` aplica as migrações e o seed automaticamente.
+Publicado em **https://controle-interacao-radio.netlify.app** com Netlify Database. Passo a passo em [`docs/PUBLICAR-NETLIFY.md`](docs/PUBLICAR-NETLIFY.md).
 
 ## Estrutura
 
 ```
 design/tokens.css        Cores, fonte, bordas e espaçamentos oficiais (fonte única)
 drizzle/                 Migrações do banco
-scripts/                 migrate.ts, seed.ts
+scripts/                 migrate.ts, sync-netlify-migrations.mjs
+netlify/database/        Migrações aplicadas pela Netlify
 src/app/(auth)/          Entrar, primeiro acesso
 src/app/(app)/           Painel, checklist/[tipo], central, historico, equipe, perfil
 src/app/actions/         Ações do servidor (validação + permissão + histórico)
