@@ -2,7 +2,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 const control =
-  "w-full rounded-lg border border-line-15 bg-surface px-4 text-[15px] text-ink placeholder:text-ink-35 transition-colors focus:border-brand focus:outline-none focus:ring-3 focus:ring-brand/15";
+  "w-full rounded-2xl border border-line-15 bg-surface px-4 text-[15px] text-ink placeholder:text-ink-35 transition-colors focus:border-brand focus:outline-none focus:ring-3 focus:ring-brand/15";
 
 export function Field({ label, htmlFor, hint, children }: { label: string; htmlFor: string; hint?: string; children: ReactNode }) {
   return (
@@ -31,7 +31,7 @@ export function Select({ className, ...props }: ComponentProps<"select">) {
 export function FormMessage({ state }: { state?: { error?: string; ok?: string } }) {
   if (!state?.error && !state?.ok) return null;
   return (
-    <p role={state.error ? "alert" : "status"} className={cn("rounded-md px-3 py-2.5 text-sm font-medium", state.error ? "bg-brand/10 text-brand-text" : "bg-bg-alt text-ink")}>
+    <p role={state.error ? "alert" : "status"} className={cn("rounded-xl px-3 py-2.5 text-sm font-medium", state.error ? "bg-brand/10 text-brand-text" : "bg-bg-alt text-ink")}>
       {state.error ?? state.ok}
     </p>
   );

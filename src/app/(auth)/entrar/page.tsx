@@ -12,7 +12,7 @@ export default async function LoginPage() {
     <>
       <p className="text-xs font-semibold uppercase tracking-eyebrow text-brand-text">Bem-vindo(a)</p>
       <h2 className="mt-2 text-3xl font-black tracking-display">Entrar</h2>
-      <p className="mt-2 text-sm text-muted">Use o e-mail cadastrado pela coordenação.</p>
+      <p className="mt-2 text-sm text-muted-foreground">Use o e-mail cadastrado pela coordenação.</p>
       <LoginForm />
     </>
   );

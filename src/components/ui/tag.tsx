@@ -10,7 +10,7 @@ const tones = {
 
 export function Tag({ tone = "neutral", dot, children, className }: { tone?: keyof typeof tones; dot?: boolean; children: ReactNode; className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-1.5 whitespace-nowrap rounded-xs border px-2 py-[3px] text-[10px] font-bold uppercase tracking-[0.15em]", tones[tone], className)}>
+    <span className={cn("inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border px-2 py-[3px] text-[10px] font-bold uppercase tracking-[0.15em]", tones[tone], className)}>
       {dot && <span className="size-1.5 rounded-full bg-current" />}
       {children}
     </span>

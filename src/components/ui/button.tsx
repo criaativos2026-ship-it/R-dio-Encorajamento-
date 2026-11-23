@@ -22,7 +22,7 @@ export type ButtonVariant = keyof typeof variants;
 
 export function buttonClass(variant: ButtonVariant = "brand", size: keyof typeof sizes = "md", className?: string) {
   return cn(
-    "inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-lg font-bold transition-colors disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-2xl font-bold transition-colors disabled:pointer-events-none disabled:opacity-50",
     variants[variant],
     sizes[size],
     className,

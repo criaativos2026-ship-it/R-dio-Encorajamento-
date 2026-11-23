@@ -49,7 +49,7 @@ export default async function ChecklistPage({ params }: { params: Promise<{ tipo
       />
 
       {aviso && (
-        <div className="mb-6 flex gap-4 rounded-lg border border-brand/40 bg-brand/[0.06] p-5">
+        <div className="mb-6 flex gap-4 rounded-2xl border border-brand/40 bg-brand/[0.06] p-5">
           <Info className="mt-0.5 size-5 shrink-0 text-brand-text" />
           <div>
             <p className="text-[11px] font-bold tracking-eyebrow text-brand-text uppercase">Importante</p>
@@ -59,13 +59,13 @@ export default async function ChecklistPage({ params }: { params: Promise<{ tipo
       )}
 
       {!service && (
-        <div className="mb-6 rounded-lg border border-line-15 bg-surface p-5 text-[15px]">
+        <div className="mb-6 rounded-2xl border border-line-15 bg-surface p-5 text-[15px]">
           Nenhum culto aberto. <Link href="/" className="font-semibold text-brand-text underline-offset-4 hover:underline">Abra o culto no painel</Link> para marcar os itens.
         </div>
       )}
 
       {checklist.total === 0 ? (
-        <p className="rounded-lg border border-line-15 bg-surface p-10 text-center text-sm text-ink-50">Nenhum item cadastrado neste checklist.</p>
+        <p className="rounded-2xl border border-line-15 bg-surface p-10 text-center text-sm text-ink-50">Nenhum item cadastrado neste checklist.</p>
       ) : (
         <ChecklistView groups={checklist.groups} userName={user.name} disabled={!service} />
       )}

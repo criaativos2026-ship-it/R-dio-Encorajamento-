@@ -21,14 +21,14 @@ export default async function Central({ searchParams }: { searchParams: Promise<
     <main className="mx-auto max-w-[1200px] px-5 py-10 sm:px-8 sm:py-14">
       <PageHeader kicker="Fique por dentro" title="Central" description="Registre ocorrências e acompanhe os comunicados da coordenação." />
 
-      <div role="tablist" className="mb-8 inline-flex rounded-lg border border-line-15 bg-surface p-1">
+      <div role="tablist" className="mb-8 inline-flex rounded-2xl border border-line-15 bg-surface p-1">
         {(["problemas", "comunicados"] as const).map((t) => (
           <Link
             key={t}
             role="tab"
             aria-selected={tab === t}
             href={t === "problemas" ? "/central" : "/central?aba=comunicados"}
-            className={cn("rounded-md px-5 py-2 text-sm font-bold capitalize transition-colors", tab === t ? "bg-ink text-white" : "text-ink-50 hover:text-ink")}
+            className={cn("rounded-xl px-5 py-2 text-sm font-bold capitalize transition-colors", tab === t ? "bg-ink text-white" : "text-ink-50 hover:text-ink")}
           >
             {t}
           </Link>
@@ -61,7 +61,7 @@ async function Problemas() {
                       {SEVERIDADE[p.severity]}
                     </Tag>
                   </div>
-                  {p.description && <p className="mt-1.5 text-sm leading-relaxed whitespace-pre-line text-muted">{p.description}</p>}
+                  {p.description && <p className="mt-1.5 text-sm leading-relaxed whitespace-pre-line text-muted-foreground">{p.description}</p>}
                   <p className="mt-1.5 text-[13px] text-ink-50">
                     {p.author} · {when(p.createdAt)}
                   </p>
@@ -83,7 +83,7 @@ async function Problemas() {
                       Resolvido
                     </Tag>
                   </div>
-                  {p.resolutionNote && <p className="mt-1.5 text-sm text-muted">{p.resolutionNote}</p>}
+                  {p.resolutionNote && <p className="mt-1.5 text-sm text-muted-foreground">{p.resolutionNote}</p>}
                   <p className="mt-1.5 text-[13px] text-ink-50">
                     Aberto por {p.author} · resolvido por {p.resolver} · {p.resolvedAt && when(p.resolvedAt)}
                   </p>

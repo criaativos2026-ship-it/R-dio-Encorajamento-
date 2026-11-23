@@ -9,10 +9,10 @@ import { FUNCOES } from "@/lib/constants";
 export function OpenServiceForm({ today, defaultFunction }: { today: string; defaultFunction: string }) {
   const [state, action] = useActionState(openService, undefined);
   return (
-    <form action={action} className="grid gap-4 rounded-lg bg-surface p-5 text-ink sm:p-6">
+    <form action={action} className="grid gap-4 rounded-2xl bg-surface p-5 text-ink sm:p-6">
       <div>
         <p className="text-[11px] font-bold uppercase tracking-eyebrow text-brand-text">Abrir culto</p>
-        <p className="mt-1 text-sm text-muted">Os checklists e a escala ficam ligados a este culto.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Os checklists e a escala ficam ligados a este culto.</p>
       </div>
       <Field label="Culto" htmlFor="title">
         <Input id="title" name="title" defaultValue="Culto" required maxLength={80} />

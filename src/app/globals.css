@@ -1,42 +1,89 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 @import "../../design/tokens.css";
 
-/* Liga os tokens oficiais ao Tailwind: bg-brand, text-ink, border-line… */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Variáveis do shadcn/ui — os MESMOS nomes que o site missaoencorajamento.com.br usa.
+ * Todas apontam para os tokens oficiais (design/tokens.css); nenhuma cor nova.
+ */
+:root {
+  --radius: var(--me-radius); /* .45rem, igual ao site */
+  --background: var(--me-bg);
+  --foreground: var(--me-ink);
+  --card: var(--me-surface);
+  --card-foreground: var(--me-ink);
+  --popover: var(--me-surface);
+  --popover-foreground: var(--me-ink);
+  --primary: var(--me-brand);              /* botões laranja, como no site */
+  --primary-foreground: var(--me-on-brand);
+  --secondary: var(--me-bg-alt);
+  --secondary-foreground: var(--me-ink);
+  --muted: var(--me-bg-alt);
+  --muted-foreground: var(--me-muted-fg);
+  --accent: var(--me-bg-alt);
+  --accent-foreground: var(--me-ink);
+  --destructive: var(--me-destructive);
+  --border: var(--me-border-15);
+  --input: var(--me-border-15);
+  --ring: var(--me-brand);
+}
+
 @theme inline {
   --font-sans: var(--font-inter), var(--me-font-sans);
   --font-mono: var(--me-font-mono);
 
+  /* shadcn */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Escala de bordas do shadcn — idêntica à medida no site */
+  --radius-sm: calc(var(--radius) * 0.6);  /* 4.32px  etiquetas */
+  --radius-md: calc(var(--radius) * 0.8);  /* 5.76px  links/menus */
+  --radius-lg: var(--radius);              /* 7.2px */
+  --radius-xl: calc(var(--radius) * 1.4);  /* 10.08px */
+  --radius-2xl: calc(var(--radius) * 1.8); /* 12.96px botões, campos, cartões */
+  --radius-3xl: 32px;                      /* cartões grandes com imagem */
+
+  /* Marca (atalhos usados nas telas) */
   --color-brand: var(--me-brand);
   --color-brand-hover: var(--me-brand-hover);
   --color-brand-text: var(--me-brand-text);
-  --color-brand-soft: var(--me-brand-soft);
   --color-bg: var(--me-bg);
   --color-bg-alt: var(--me-bg-alt);
   --color-surface: var(--me-surface);
   --color-night: #0E0E0D;
-  --color-night-alt: #161615;
   --color-ink: var(--me-ink);
   --color-ink-50: var(--me-ink-50);
   --color-ink-35: var(--me-ink-35);
   --color-ink-25: var(--me-ink-25);
-  --color-muted: var(--me-muted-fg);
   --color-line: var(--me-border);
   --color-line-15: var(--me-border-15);
-  --color-danger: var(--me-destructive);
-
-  --radius-xs: var(--me-radius-xs);
-  --radius-sm: var(--me-radius-sm);
-  --radius-md: var(--me-radius-md);
-  --radius-lg: var(--me-radius-lg);
-  --radius-xl: var(--me-radius-xl);
 
   --tracking-display: var(--me-tracking-display);
   --tracking-eyebrow: var(--me-tracking-eyebrow);
 }
 
 @layer base {
+  * { @apply border-border outline-ring/50; }
   html { -webkit-text-size-adjust: 100%; }
-  body { @apply bg-bg-alt text-ink antialiased; }
-  :focus-visible { outline: 2px solid var(--me-brand); outline-offset: 2px; }
+  body { @apply bg-bg-alt text-foreground antialiased; }
   ::selection { background: #FF5C3540; }
 }

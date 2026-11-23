@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 export function Panel({ children, className }: { children: ReactNode; className?: string }) {
-  return <section className={cn("overflow-hidden rounded-lg border border-line-15 bg-surface", className)}>{children}</section>;
+  return <section className={cn("overflow-hidden rounded-2xl border border-line-15 bg-surface", className)}>{children}</section>;
 }
 
 export function PanelHeader({ title, kicker, action }: { title?: ReactNode; kicker?: string; action?: ReactNode }) {

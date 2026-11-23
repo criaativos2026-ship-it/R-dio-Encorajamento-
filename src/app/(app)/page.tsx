@@ -85,7 +85,7 @@ export default async function Painel() {
 
       <main className="mx-auto max-w-[1200px] px-5 py-10 sm:px-8 sm:py-12">
         {/* Grade numerada: mesmo desenho do bloco "Identidade" do site */}
-        <div className="grid overflow-hidden rounded-lg border border-line-15 bg-surface sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid overflow-hidden rounded-2xl border border-line-15 bg-surface sm:grid-cols-2 xl:grid-cols-4">
           <StatusCell n="01" href="/checklist/montagem" title="Montagem" progress={montagem} active={!!service} />
           <StatusCell n="02" href="/checklist/desmontagem" title="Desmontagem" progress={desmontagem} active={!!service} />
           <Link href="/central" className="flex flex-col gap-2.5 border-b border-line p-6 transition-colors hover:bg-bg-alt/60 sm:p-7 xl:border-r xl:border-b-0">
@@ -99,7 +99,7 @@ export default async function Painel() {
                 "Nenhum problema aberto"
               )}
             </h3>
-            <p className="text-sm leading-relaxed text-muted">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {openProblems[0] ? `${openProblems[0].title}. Prioridade ${SEVERIDADE[openProblems[0].severity].toLowerCase()}.` : "Tudo certo por aqui."}
             </p>
             <GoLink>Ver central</GoLink>
@@ -180,7 +180,7 @@ function StatusCell({
       <h3 className="mt-1 text-[22px] leading-tight font-black tracking-display sm:text-[26px]">
         {title} {state && (done ? <span>{state}</span> : <Hl>{state}</Hl>)}
       </h3>
-      <p className="text-sm leading-relaxed text-muted">{detail}</p>
+      <p className="text-sm leading-relaxed text-muted-foreground">{detail}</p>
       <div className="mt-auto pt-3">
         <div className="mb-2.5 flex justify-between text-[13px] font-semibold">
           <span>

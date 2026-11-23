@@ -41,7 +41,7 @@ export default async function Equipe() {
       <div id="checklists" className="mt-14 mb-5 scroll-mt-28">
         <p className="text-xs font-semibold tracking-eyebrow text-brand-text uppercase">Modelos</p>
         <h2 className="mt-2 text-[28px] font-black tracking-display sm:text-[40px]">Checklists</h2>
-        <p className="mt-2 text-sm text-muted">As mudanças valem para todos os cultos. O que já foi marcado continua no histórico.</p>
+        <p className="mt-2 text-sm text-muted-foreground">As mudanças valem para todos os cultos. O que já foi marcado continua no histórico.</p>
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
         <Panel className="self-start">

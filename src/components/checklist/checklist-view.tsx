@@ -31,9 +31,9 @@ export function ChecklistView({ groups, userName, disabled }: { groups: Group[];
   }
 
   return (
-    <div className="rounded-lg border border-line-15 bg-surface">
+    <div className="rounded-2xl border border-line-15 bg-surface">
       {/* Sem overflow-hidden no cartão: senão a barra fixa se posiciona em relação a ele, não à tela. */}
-      <div className="sticky top-16 z-10 rounded-t-lg border-b border-line bg-surface px-5 py-4 sm:px-6 lg:top-20">
+      <div className="sticky top-16 z-10 rounded-t-2xl border-b border-line bg-surface px-5 py-4 sm:px-6 lg:top-20">
         <div className="mb-2.5 flex justify-between text-[13px] font-semibold">
           <span>{pct === 100 ? "Checklist concluído" : `${completed} de ${all.length} concluídas`}</span>
           <span className="font-mono text-ink-50">{pct}%</span>
@@ -59,13 +59,13 @@ export function ChecklistView({ groups, userName, disabled }: { groups: Group[];
             {group.items.map((item) => (
               <label
                 key={item.id}
-                className={cn("flex scroll-mt-40 scroll-mb-28 cursor-pointer items-start gap-4 px-5 py-3.5 transition-colors hover:bg-bg-alt/70 sm:px-6 lg:scroll-mt-44 lg:scroll-mb-4 last:rounded-b-lg", disabled && "pointer-events-none opacity-60")}
+                className={cn("flex scroll-mt-40 scroll-mb-28 cursor-pointer items-start gap-4 px-5 py-3.5 transition-colors hover:bg-bg-alt/70 sm:px-6 lg:scroll-mt-44 lg:scroll-mb-4 last:rounded-b-2xl", disabled && "pointer-events-none opacity-60")}
               >
                 <input type="checkbox" className="peer sr-only" checked={!!item.done} disabled={disabled} onChange={(e) => toggle(item.id, e.target.checked)} />
                 <span
                   aria-hidden
                   className={cn(
-                    "mt-0.5 grid size-6 shrink-0 place-items-center rounded-xs border-2 transition-colors peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand",
+                    "mt-0.5 grid size-6 shrink-0 place-items-center rounded-sm border-2 transition-colors peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand",
                     item.done ? "border-ink bg-ink text-white" : "border-ink-25 bg-surface",
                   )}
                 >

@@ -43,7 +43,7 @@ export function ResolveForm({ id }: { id: string }) {
   const [state, action] = useActionState(resolveProblem, undefined);
   return (
     <details className="group mt-3">
-      <summary className="inline-flex h-9 cursor-pointer list-none items-center rounded-lg border border-line-15 px-3.5 text-[13px] font-bold transition-colors hover:border-ink-35 [&::-webkit-details-marker]:hidden">
+      <summary className="inline-flex h-9 cursor-pointer list-none items-center rounded-2xl border border-line-15 px-3.5 text-[13px] font-bold transition-colors hover:border-ink-35 [&::-webkit-details-marker]:hidden">
         Marcar como resolvido
       </summary>
       <form action={action} className="mt-3 grid gap-3">

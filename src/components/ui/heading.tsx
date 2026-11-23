@@ -18,7 +18,7 @@ export function PageHeader({ kicker, title, description, actions }: { kicker?: s
       <div className="max-w-2xl">
         {kicker && <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-text sm:tracking-eyebrow">{kicker}</p>}
         <h1 className="mt-2 text-[34px] leading-[1.05] font-black tracking-display sm:text-5xl">{title}</h1>
-        {description && <p className="mt-3 text-[15px] leading-relaxed text-muted">{description}</p>}
+        {description && <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
     </div>
