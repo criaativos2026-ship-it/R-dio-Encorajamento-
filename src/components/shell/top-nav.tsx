@@ -8,7 +8,7 @@ import { NAV, isActive } from "./nav";
 
 export function TopNav({ openProblems, showTeam }: { openProblems: number; showTeam: boolean }) {
   const pathname = usePathname();
-  const items = showTeam ? [...NAV, { href: "/equipe", label: "Equipe", icon: Users }] : NAV;
+  const items = showTeam ? [...NAV, { href: "/gestao", label: "Gestão", icon: Users }] : NAV;
   return (
     <nav aria-label="Principal" className="hidden items-center gap-6 lg:flex xl:gap-7">
       {items.map((item) => {
@@ -36,7 +36,7 @@ export function TabBar({ openProblems }: { openProblems: number }) {
   return (
     <nav
       aria-label="Principal"
-      className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-line-15 bg-bg px-1 pt-2 pb-[max(10px,env(safe-area-inset-bottom))] lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 print:hidden border-t border-line-15 bg-bg px-1 pt-2 pb-[max(10px,env(safe-area-inset-bottom))] lg:hidden"
     >
       {NAV.map(({ href, label, icon: Icon }) => {
         const active = isActive(pathname, href);

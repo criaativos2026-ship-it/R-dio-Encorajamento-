@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LogOut, UserRound, Users } from "lucide-react";
+import { LayoutDashboard as Users, LogOut, UserRound } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { initials } from "@/lib/format";
 
-export function UserMenu({ name, email, role, coord }: { name: string; email: string; role: string; coord: boolean }) {
+export function UserMenu({ name, email, role, gestao }: { name: string; email: string; role: string; gestao: boolean }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50" aria-label="Menu da conta">
@@ -34,10 +34,10 @@ export function UserMenu({ name, email, role, coord }: { name: string; email: st
             <UserRound /> Meu perfil
           </Link>
         </DropdownMenuItem>
-        {coord && (
+        {gestao && (
           <DropdownMenuItem asChild>
-            <Link href="/equipe">
-              <Users /> Equipe
+            <Link href="/gestao">
+              <Users /> Gestão
             </Link>
           </DropdownMenuItem>
         )}

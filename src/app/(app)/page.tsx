@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { FUNCOES, SEVERIDADE } from "@/lib/constants";
 import { firstName, greeting, initials, serviceDate, todayISO, when } from "@/lib/format";
 import { getActiveService, getActivities, getNotices, getProblems, getProgress, getRoster } from "@/lib/queries";
-import { isCoordenacao, requireUser } from "@/lib/session";
+import { isGestao, requireUser } from "@/lib/session";
 
 export const metadata = { title: "Painel" };
 
@@ -76,7 +76,7 @@ export default async function Painel() {
               <a href={RADIO_URL} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "outlineLight", size: "lg" })}>
                 <Radio className="size-4" /> Ouvir a rádio
               </a>
-              {isCoordenacao(user) && <CloseServiceButton pending={pending} />}
+              {isGestao(user) && <CloseServiceButton pending={pending} />}
             </div>
           ) : (
             <div className="w-full lg:w-[380px]">
@@ -110,7 +110,7 @@ export default async function Painel() {
           <Link href="/central?aba=comunicados" className="flex flex-col gap-2.5 bg-brand p-6 text-white transition-colors hover:bg-brand-hover sm:p-7">
             <span className="font-mono text-xs text-white/70">04</span>
             <h3 className="mt-1 text-[22px] leading-tight font-black tracking-display">{notice ? notice.title : "Nenhum comunicado"}</h3>
-            <p className="line-clamp-3 text-sm leading-relaxed text-white/90">{notice ? notice.body : "Os comunicados da coordenação aparecem aqui."}</p>
+            <p className="line-clamp-3 text-sm leading-relaxed text-white/90">{notice ? notice.body : "Os comunicados da gestão aparecem aqui."}</p>
             <GoLink light>Comunicados</GoLink>
           </Link>
         </div>

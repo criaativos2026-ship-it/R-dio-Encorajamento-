@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/ui/heading";
 import { CHECKLIST_AVISO, CHECKLIST_LABEL } from "@/lib/constants";
 import { serviceDate } from "@/lib/format";
 import { getActiveService, getChecklist } from "@/lib/queries";
-import { isCoordenacao, requireUser } from "@/lib/session";
+import { isGestao, requireUser } from "@/lib/session";
 
 const KINDS = ["montagem", "desmontagem"] as const;
 type Kind = (typeof KINDS)[number];
@@ -28,7 +28,7 @@ export default async function ChecklistPage({ params }: { params: Promise<{ tipo
   const service = await getActiveService();
   const checklist = await getChecklist(kind, service?.id ?? null);
   const aviso = CHECKLIST_AVISO[kind];
-  const coord = isCoordenacao(user);
+  const coord = isGestao(user);
 
   return (
     <main className="mx-auto max-w-[860px] px-5 py-10 sm:px-8 sm:py-14">
@@ -41,7 +41,7 @@ export default async function ChecklistPage({ params }: { params: Promise<{ tipo
             <>
               {service && checklist.completed > 0 && <ResetChecklistButton kind={kind} label={label} />}
               <Button asChild variant="outline" size="sm">
-<Link href="/equipe#checklists">
+<Link href="/gestao/checklists">
         <Pencil className="size-3.5" /> Editar itens
        </Link>
 </Button>

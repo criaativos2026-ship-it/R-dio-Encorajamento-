@@ -20,7 +20,7 @@ export function LoginForm() {
       <SubmitButton size="lg" pendingText="Entrando…" className="w-full">
         Entrar
       </SubmitButton>
-      <p className="text-center text-xs text-ink-50">Esqueceu a senha? Fale com a coordenação da equipe.</p>
+      <p className="text-center text-xs text-ink-50">Esqueceu a senha? Fale com a liderança da equipe.</p>
     </form>
   );
 }

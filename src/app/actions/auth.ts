@@ -37,17 +37,18 @@ const setupSchema = z.object({
   name: z.string().trim().min(2, "Informe seu nome.").max(80),
   email: z.string().trim().toLowerCase().email("E-mail inválido."),
   password: z.string().min(8, "A senha precisa ter pelo menos 8 caracteres.").max(200),
+  role: z.enum(["pastor", "lider", "coordenacao"]),
 });
 
-/** Primeiro acesso: cria a conta de coordenação. Só funciona enquanto não houver nenhum usuário. */
+/** Primeiro acesso: cria a primeira conta da gestão. Só funciona enquanto não houver nenhum usuário. */
 export async function setupFirstUser(_: FormState, form: FormData): Promise<FormState> {
   if ((await countUsers()) > 0) redirect("/entrar");
   const parsed = setupSchema.safeParse(Object.fromEntries(form));
   if (!parsed.success) return { error: parsed.error.issues[0].message };
-  const { name, email, password } = parsed.data;
+  const { name, email, password, role } = parsed.data;
   const [user] = await db
     .insert(users)
-    .values({ name, email, passwordHash: await bcrypt.hash(password, 12), role: "coordenacao", defaultFunction: "Coordenação" })
+    .values({ name, email, passwordHash: await bcrypt.hash(password, 12), role, defaultFunction: "Coordenação" })
     .returning();
   await logActivity("sistema", "Configurou o Controle Interação", user.id);
   await signIn("credentials", { email, password, redirectTo: "/" });

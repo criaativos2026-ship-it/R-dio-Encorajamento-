@@ -9,7 +9,7 @@ import { logActivity } from "@/lib/activity";
 import { FUNCOES } from "@/lib/constants";
 import { serviceDate } from "@/lib/format";
 import { getActiveService } from "@/lib/queries";
-import { requireCoordenacao, requireUser } from "@/lib/session";
+import { requireGestao, requireUser } from "@/lib/session";
 import type { FormState } from "./types";
 
 const openSchema = z.object({
@@ -34,7 +34,7 @@ export async function openService(_: FormState, form: FormData): Promise<FormSta
 }
 
 export async function closeService() {
-  const user = await requireCoordenacao();
+  const user = await requireGestao();
   const service = await getActiveService();
   if (!service) return;
   await db.update(services).set({ closedAt: new Date() }).where(eq(services.id, service.id));

@@ -5,8 +5,8 @@ import { PasswordForm, ProfileForm } from "@/components/perfil-forms";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/heading";
 import { Panel, PanelHeader } from "@/components/panel";
-import { FUNCOES } from "@/lib/constants";
-import { isCoordenacao, requireUser } from "@/lib/session";
+import { FUNCOES, PERFIL_LABEL } from "@/lib/constants";
+import { isGestao, requireUser } from "@/lib/session";
 
 export const metadata = { title: "Perfil" };
 
@@ -15,15 +15,15 @@ export default async function Perfil() {
   return (
     <main className="mx-auto max-w-[860px] px-5 py-10 sm:px-8 sm:py-14">
       <PageHeader
-        kicker={isCoordenacao(user) ? "Coordenação" : "Voluntário(a)"}
+        kicker={PERFIL_LABEL[user.role]}
         title={user.name}
         description={user.email}
         actions={
           <>
-            {isCoordenacao(user) && (
+            {isGestao(user) && (
               <Button asChild variant="outline" className="lg:hidden">
-<Link href="/equipe">
-        <Users className="size-4" /> Equipe
+<Link href="/gestao">
+        <Users className="size-4" /> Gestão
        </Link>
 </Button>
             )}

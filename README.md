@@ -8,13 +8,22 @@ A identidade visual segue o site oficial ([missaoencorajamento.com.br](https://w
 
 | Tela | O que faz |
 |---|---|
-| **Entrar** | Login com e-mail e senha. Na primeira execução, `/configurar` cria a conta da coordenação. |
+| **Entrar** | Login com e-mail e senha. Na primeira execução, `/configurar` cria a primeira conta da gestão. |
 | **Painel** | Culto em andamento, progresso da montagem e da desmontagem, problemas abertos, último comunicado, atividade recente e escala do dia. Qualquer voluntário pode abrir o culto do dia; a coordenação encerra. |
 | **Montagem / Desmontagem** | Checklists por grupo. Cada item marcado registra quem marcou e quando. O aviso "Importante" aparece no topo da desmontagem. |
 | **Central** | Registro de problemas com prioridade, resolução com observação e mural de comunicados (a coordenação publica e fixa). |
 | **Histórico** | Linha do tempo de tudo o que foi feito, agrupada por dia. |
-| **Equipe** (coordenação) | Cadastro de voluntários, perfil de acesso, senha provisória, desativação de contas e edição dos itens dos checklists. |
+| **Gestão** (pastor, líder, coordenação) | Visão geral e **relatório de cada culto** (escala, quem marcou cada item e quando, problemas, pendências, linha do tempo, impressão/PDF), cadastro de pessoas e perfis, e edição dos checklists. |
 | **Perfil** | Nome, função principal, troca de senha e saída. |
+
+## Perfis de acesso
+
+| Perfil | Acesso |
+|---|---|
+| **Pastor(a)**, **Líder**, **Coordenação** | Área de Gestão: acompanham tudo e alteram o app (pessoas, perfis, checklists, comunicados, encerrar culto). Mesmas permissões; muda só o nome exibido. |
+| **Voluntário(a)** | Dia a dia: abre o culto, entra na escala, marca os checklists, registra e resolve problemas, lê comunicados e o histórico. |
+
+O app sempre mantém pelo menos uma pessoa ativa na gestão.
 
 ## Stack
 

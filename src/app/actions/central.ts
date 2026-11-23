@@ -7,7 +7,7 @@ import { db } from "@/db";
 import { notices, problems } from "@/db/schema";
 import { logActivity } from "@/lib/activity";
 import { getActiveService } from "@/lib/queries";
-import { requireCoordenacao, requireUser } from "@/lib/session";
+import { requireGestao, requireUser } from "@/lib/session";
 import type { FormState } from "./types";
 
 const problemSchema = z.object({
@@ -50,7 +50,7 @@ const noticeSchema = z.object({
 });
 
 export async function createNotice(_: FormState, form: FormData): Promise<FormState> {
-  const user = await requireCoordenacao();
+  const user = await requireGestao();
   const parsed = noticeSchema.safeParse(Object.fromEntries(form));
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   await db.insert(notices).values({ title: parsed.data.title, body: parsed.data.body, pinned: !!parsed.data.pinned, createdBy: user.id });
@@ -60,7 +60,7 @@ export async function createNotice(_: FormState, form: FormData): Promise<FormSt
 }
 
 export async function togglePinNotice(id: string) {
-  await requireCoordenacao();
+  await requireGestao();
   const noticeId = z.string().uuid().parse(id);
   const [n] = await db.select().from(notices).where(eq(notices.id, noticeId)).limit(1);
   if (!n) return;
@@ -69,7 +69,7 @@ export async function togglePinNotice(id: string) {
 }
 
 export async function deleteNotice(id: string) {
-  const user = await requireCoordenacao();
+  const user = await requireGestao();
   const noticeId = z.string().uuid().parse(id);
   const [n] = await db.delete(notices).where(eq(notices.id, noticeId)).returning();
   if (n) await logActivity("sistema", `Removeu o comunicado: ${n.title}`, user.id);

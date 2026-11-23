@@ -12,11 +12,11 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { SubmitButton } from "@/components/ui/submit-button";
-import { FUNCOES } from "@/lib/constants";
+import { FUNCOES, PERFIL_LABEL, PERFIS, PERFIS_GESTAO, type Perfil } from "@/lib/constants";
 import { initials } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-type Member = { id: string; name: string; email: string; role: "voluntario" | "coordenacao"; active: boolean; defaultFunction: string | null };
+type Member = { id: string; name: string; email: string; role: Perfil; active: boolean; defaultFunction: string | null };
 
 export function CreateUserForm() {
   const [state, action] = useActionState(createUser, undefined);
@@ -40,10 +40,13 @@ export function CreateUserForm() {
             ))}
           </NativeSelect>
         </Field>
-        <Field label="Acesso" htmlFor="u-role">
+        <Field label="Perfil" htmlFor="u-role">
           <NativeSelect id="u-role" name="role" defaultValue="voluntario">
-            <option value="voluntario">Voluntário</option>
-            <option value="coordenacao">Coordenação</option>
+            {PERFIS.map((p) => (
+              <option key={p} value={p}>
+                {PERFIL_LABEL[p]}
+              </option>
+            ))}
           </NativeSelect>
         </Field>
       </div>
@@ -73,11 +76,11 @@ function ResetPassword({ id }: { id: string }) {
 export function MemberRow({ member, isMe }: { member: Member; isMe: boolean }) {
   const [pending, start] = useTransition();
   const [open, setOpen] = useState(false);
-  const toggleRole = () =>
+  const changeRole = (role: Perfil) =>
     start(async () => {
-      const res = await setUserRole(member.id, member.role === "coordenacao" ? "voluntario" : "coordenacao");
+      const res = await setUserRole(member.id, role);
       if (res?.error) toast.error(res.error);
-      else toast.success("Acesso atualizado.");
+      else toast.success(`${member.name} agora é ${PERFIL_LABEL[role]}.`);
     });
 
   return (
@@ -89,7 +92,7 @@ export function MemberRow({ member, isMe }: { member: Member; isMe: boolean }) {
         <div className="min-w-0 flex-1">
           <p className="flex flex-wrap items-center gap-2 text-[15px] font-semibold">
             {member.name} {isMe && <span className="text-xs font-normal text-ink-50">(você)</span>}
-            {member.role === "coordenacao" && <Badge variant="brand">Coordenação</Badge>}
+            <Badge variant={PERFIS_GESTAO.includes(member.role) ? "brand" : "outline"}>{PERFIL_LABEL[member.role]}</Badge>
             {!member.active && <Badge variant="outline">Desativado</Badge>}
           </p>
           <p className="truncate text-[13px] text-ink-50">
@@ -98,9 +101,20 @@ export function MemberRow({ member, isMe }: { member: Member; isMe: boolean }) {
           </p>
         </div>
         <div className="flex flex-wrap gap-1.5">
-          <Button size="sm" variant="outline" disabled={pending} onClick={toggleRole}>
-            {member.role === "coordenacao" ? "Tornar voluntário" : "Tornar coordenação"}
-          </Button>
+          <NativeSelect
+            aria-label={`Perfil de ${member.name}`}
+            value={member.role}
+            disabled={pending}
+            onChange={(e) => changeRole(e.target.value as Perfil)}
+            wrapperClassName="w-40"
+            className="h-9 pl-3.5 text-[13px] font-bold"
+          >
+            {PERFIS.map((p) => (
+              <option key={p} value={p}>
+                {PERFIL_LABEL[p]}
+              </option>
+            ))}
+          </NativeSelect>
           <CollapsibleTrigger asChild>
             <Button size="sm" variant="outline">
               Senha

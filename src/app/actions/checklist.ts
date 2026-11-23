@@ -8,7 +8,7 @@ import { checklistItems, checks } from "@/db/schema";
 import { logActivity } from "@/lib/activity";
 import { CHECKLIST_LABEL } from "@/lib/constants";
 import { getActiveService, getChecklist } from "@/lib/queries";
-import { requireCoordenacao, requireUser } from "@/lib/session";
+import { requireGestao, requireUser } from "@/lib/session";
 import type { FormState } from "./types";
 
 const toggleSchema = z.object({ itemId: z.string().uuid(), checked: z.boolean() });
@@ -46,7 +46,7 @@ export async function toggleCheck(input: { itemId: string; checked: boolean }) {
   return {};
 }
 
-// ---------- Edição do modelo (coordenação) ----------
+// ---------- Edição do modelo (gestão) ----------
 
 const kindSchema = z.enum(["montagem", "desmontagem"]);
 
@@ -57,7 +57,7 @@ const addSchema = z.object({
 });
 
 export async function addChecklistItem(_: FormState, form: FormData): Promise<FormState> {
-  const user = await requireCoordenacao();
+  const user = await requireGestao();
   const parsed = addSchema.safeParse(Object.fromEntries(form));
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const { kind, group, label } = parsed.data;
@@ -77,7 +77,7 @@ export async function addChecklistItem(_: FormState, form: FormData): Promise<Fo
 }
 
 export async function removeChecklistItem(itemId: string) {
-  const user = await requireCoordenacao();
+  const user = await requireGestao();
   const id = z.string().uuid().parse(itemId);
   const [item] = await db.update(checklistItems).set({ active: false }).where(eq(checklistItems.id, id)).returning();
   if (item) await logActivity("sistema", `Removeu do checklist de ${CHECKLIST_LABEL[item.kind].toLowerCase()}: ${item.label}`, user.id);
@@ -85,7 +85,7 @@ export async function removeChecklistItem(itemId: string) {
 }
 
 export async function moveChecklistItem(itemId: string, direction: "up" | "down") {
-  await requireCoordenacao();
+  await requireGestao();
   const id = z.string().uuid().parse(itemId);
   const [item] = await db.select().from(checklistItems).where(eq(checklistItems.id, id)).limit(1);
   if (!item) return;
@@ -105,7 +105,7 @@ export async function moveChecklistItem(itemId: string, direction: "up" | "down"
 }
 
 export async function resetChecklist(kind: "montagem" | "desmontagem") {
-  const user = await requireCoordenacao();
+  const user = await requireGestao();
   const k = kindSchema.parse(kind);
   const service = await getActiveService();
   if (!service) return;

@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { users, type User } from "@/db/schema";
+import { PERFIS_GESTAO } from "@/lib/constants";
 
 /** Usuário atual, conferido no banco a cada requisição (contas desativadas perdem acesso na hora). */
 export const getCurrentUser = cache(async (): Promise<User | null> => {
@@ -21,10 +22,11 @@ export async function requireUser() {
   return user;
 }
 
-export async function requireCoordenacao() {
+/** Pastor(a), líder ou coordenação. */
+export const isGestao = (u: Pick<User, "role">) => PERFIS_GESTAO.includes(u.role);
+
+export async function requireGestao() {
   const user = await requireUser();
-  if (user.role !== "coordenacao") redirect("/");
+  if (!isGestao(user)) redirect("/");
   return user;
 }
-
-export const isCoordenacao = (u: Pick<User, "role">) => u.role === "coordenacao";

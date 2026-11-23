@@ -9,18 +9,18 @@ import { cn } from "@/lib/utils";
 import { SEVERIDADE } from "@/lib/constants";
 import { when } from "@/lib/format";
 import { getNotices, getProblems } from "@/lib/queries";
-import { isCoordenacao, requireUser } from "@/lib/session";
+import { isGestao, requireUser } from "@/lib/session";
 
 export const metadata = { title: "Central" };
 
 export default async function Central({ searchParams }: { searchParams: Promise<{ aba?: string }> }) {
   const user = await requireUser();
   const tab = (await searchParams).aba === "comunicados" ? "comunicados" : "problemas";
-  const coord = isCoordenacao(user);
+  const coord = isGestao(user);
 
   return (
     <main className="mx-auto max-w-[1200px] px-5 py-10 sm:px-8 sm:py-14">
-      <PageHeader kicker="Fique por dentro" title="Central" description="Registre ocorrências e acompanhe os comunicados da coordenação." />
+      <PageHeader kicker="Fique por dentro" title="Central" description="Registre ocorrências e acompanhe os comunicados da gestão." />
 
       <div role="tablist" className="mb-8 inline-flex rounded-2xl border border-line-15 bg-surface p-1">
         {(["problemas", "comunicados"] as const).map((t) => (

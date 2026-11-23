@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, count, desc, eq, isNull } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNull } from "drizzle-orm";
 import { db } from "@/db";
 import {
   activities,
@@ -132,4 +132,93 @@ export async function getRoster(serviceId: string) {
 export async function countUsers() {
   const [row] = await db.select({ n: count() }).from(users);
   return row?.n ?? 0;
+}
+
+// ---------- Gestão: acompanhamento dos cultos ----------
+
+/** Resumo dos cultos mais recentes: progresso de cada checklist, escala e problemas. */
+export async function getServicesOverview(limit = 20) {
+  const list = await db.select().from(services).orderBy(desc(services.date), desc(services.createdAt)).limit(limit);
+  if (!list.length) return [];
+  const ids = list.map((s) => s.id);
+
+  const [totals, done, roster, probs] = await Promise.all([
+    db
+      .select({ kind: checklistItems.kind, n: count() })
+      .from(checklistItems)
+      .where(eq(checklistItems.active, true))
+      .groupBy(checklistItems.kind),
+    db
+      .select({ serviceId: checks.serviceId, kind: checklistItems.kind, n: count() })
+      .from(checks)
+      .innerJoin(checklistItems, and(eq(checklistItems.id, checks.itemId), eq(checklistItems.active, true)))
+      .where(inArray(checks.serviceId, ids))
+      .groupBy(checks.serviceId, checklistItems.kind),
+    db.select({ serviceId: assignments.serviceId, n: count() }).from(assignments).where(inArray(assignments.serviceId, ids)).groupBy(assignments.serviceId),
+    db
+      .select({ serviceId: problems.serviceId, status: problems.status, n: count() })
+      .from(problems)
+      .where(inArray(problems.serviceId, ids))
+      .groupBy(problems.serviceId, problems.status),
+  ]);
+
+  const total = (k: ChecklistKind) => totals.find((t) => t.kind === k)?.n ?? 0;
+  return list.map((s) => {
+    const prog = (k: ChecklistKind) => {
+      const completed = done.find((d) => d.serviceId === s.id && d.kind === k)?.n ?? 0;
+      const t = total(k);
+      return { completed, total: t, pct: t ? Math.round((completed / t) * 100) : 0 };
+    };
+    return {
+      ...s,
+      montagem: prog("montagem"),
+      desmontagem: prog("desmontagem"),
+      roster: roster.find((r) => r.serviceId === s.id)?.n ?? 0,
+      openProblems: probs.find((p) => p.serviceId === s.id && p.status === "aberto")?.n ?? 0,
+      totalProblems: probs.filter((p) => p.serviceId === s.id).reduce((a, p) => a + p.n, 0),
+    };
+  });
+}
+
+/** Relatório completo de um culto. */
+export async function getServiceReport(serviceId: string) {
+  const [service] = await db
+    .select({ service: services, openedBy: users.name })
+    .from(services)
+    .leftJoin(users, eq(users.id, services.createdBy))
+    .where(eq(services.id, serviceId))
+    .limit(1);
+  if (!service) return null;
+
+  const [roster, montagem, desmontagem, serviceProblems, timeline] = await Promise.all([
+    getRoster(serviceId),
+    getChecklist("montagem", serviceId),
+    getChecklist("desmontagem", serviceId),
+    db
+      .select({
+        id: problems.id,
+        title: problems.title,
+        description: problems.description,
+        severity: problems.severity,
+        status: problems.status,
+        createdAt: problems.createdAt,
+        resolvedAt: problems.resolvedAt,
+        resolutionNote: problems.resolutionNote,
+        author: users.name,
+        resolver: resolver.name,
+      })
+      .from(problems)
+      .innerJoin(users, eq(users.id, problems.createdBy))
+      .leftJoin(resolver, eq(resolver.id, problems.resolvedBy))
+      .where(eq(problems.serviceId, serviceId))
+      .orderBy(asc(problems.createdAt)),
+    db
+      .select({ id: activities.id, type: activities.type, message: activities.message, createdAt: activities.createdAt, user: users.name })
+      .from(activities)
+      .leftJoin(users, eq(users.id, activities.userId))
+      .where(eq(activities.serviceId, serviceId))
+      .orderBy(asc(activities.createdAt)),
+  ]);
+
+  return { ...service.service, openedBy: service.openedBy, roster, montagem, desmontagem, problems: serviceProblems, timeline };
 }

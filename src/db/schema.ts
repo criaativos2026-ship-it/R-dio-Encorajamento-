@@ -14,7 +14,7 @@ import {
   date,
 } from "drizzle-orm/pg-core";
 
-export const userRole = pgEnum("user_role", ["voluntario", "coordenacao"]);
+export const userRole = pgEnum("user_role", ["voluntario", "coordenacao", "lider", "pastor"]);
 export const checklistKind = pgEnum("checklist_kind", ["montagem", "desmontagem"]);
 export const severity = pgEnum("severity", ["baixa", "media", "alta"]);
 export const problemStatus = pgEnum("problem_status", ["aberto", "resolvido"]);
@@ -30,7 +30,7 @@ export const activityType = pgEnum("activity_type", [
   "sistema",
 ]);
 
-/** Voluntários e coordenação da equipe de serviço. */
+/** Equipe de serviço: voluntários e gestão (pastor, líder, coordenação). */
 export const users = pgTable(
   "users",
   {
@@ -73,7 +73,7 @@ export const assignments = pgTable(
   (t) => [primaryKey({ columns: [t.serviceId, t.userId] })],
 );
 
-/** Modelo dos checklists (editável pela coordenação). */
+/** Modelo dos checklists (editável pela gestão). */
 export const checklistItems = pgTable(
   "checklist_items",
   {
@@ -169,6 +169,7 @@ export const activitiesRelations = relations(activities, ({ one }) => ({
 }));
 
 export type User = typeof users.$inferSelect;
+export type UserRole = (typeof userRole.enumValues)[number];
 export type Service = typeof services.$inferSelect;
 export type ChecklistKind = (typeof checklistKind.enumValues)[number];
 export type Severity = (typeof severity.enumValues)[number];
