@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proposta — Tela inicial · Controle Interação</title>
+<!-- Proposta visual estática para validação. Usa os tokens oficiais extraídos do site. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../design/tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--me-font-sans); color: var(--me-ink); background: var(--me-bg-alt); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+  /* Cabeçalho — mesmo padrão do site: branco, logo à esquerda, menu, CTA contornado laranja, avatar */
+  header { background: var(--me-bg); border-bottom: 1px solid var(--me-border); position: sticky; top: 0; z-index: 5; }
+  header .wrap { display: flex; align-items: center; height: 80px; gap: 32px; }
+  .logo { height: 48px; width: auto; display: block; }
+  .app-id { border-left: 1px solid var(--me-border-15); padding-left: 16px; font-size: 11px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--me-ink-50); line-height: 1.6; white-space: nowrap; }
+  nav.top { display: flex; gap: 24px; margin-left: auto; }
+  nav.top a { font-size: 16px; color: var(--me-ink-50); font-weight: 500; }
+  nav.top a[aria-current] { color: var(--me-ink); font-weight: 700; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-family: inherit; font-size: 14px; font-weight: 700; border-radius: var(--me-radius-lg); padding: 10px 20px; border: 1px solid transparent; cursor: pointer; white-space: nowrap; }
+  .btn-brand { background: var(--me-brand); color: var(--me-on-brand); }
+  .btn-brand:hover { background: var(--me-brand-hover); }
+  .btn-outline-brand { border-color: var(--me-brand); color: var(--me-brand-text); background: transparent; }
+  .btn-outline-light { border-color: #FFFFFF4D; color: #FFFFFFCC; background: transparent; }
+  .avatar { flex: none; width: 36px; height: 36px; border-radius: var(--me-radius-full); background: var(--me-bg-alt); display: grid; place-items: center; color: var(--me-ink-50); }
+
+  /* Faixa escura — referência direta ao hero do site (fundo #0E0E0D, eyebrow com traço laranja, título 900) */
+  .hero { background: #0E0E0D; color: #fff; padding: 56px 0 64px; }
+  .hero .wrap { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+  .eyebrow { display: flex; align-items: center; gap: 12px; font-family: var(--me-font-mono); font-size: 13px; font-weight: 600; letter-spacing: var(--me-tracking-eyebrow); text-transform: uppercase; color: #FFFFFF99; }
+  .eyebrow::before { content: ""; width: 32px; height: 1px; background: var(--me-brand); }
+  .hero h1 { font-size: 64px; line-height: 1.02; font-weight: var(--me-weight-display); letter-spacing: var(--me-tracking-display); margin: 18px 0 0; }
+  .hero h1 em { font-style: normal; color: var(--me-brand); }
+  .hero p { color: #FFFFFF99; margin: 14px 0 0; max-width: 46ch; line-height: 1.55; }
+  .hero .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .live { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #fff; padding: 6px 12px; border-radius: var(--me-radius-full); border: 1px solid #FFFFFF4D; margin-bottom: 14px; }
+  .live b { width: 8px; height: 8px; border-radius: 50%; background: var(--me-brand); box-shadow: 0 0 0 4px #FF5C354D; }
+
+  /* Grade de status — mesmo desenho do bloco "Identidade" do site (grade com bordas finas e números mono) */
+  main { padding: 48px 0 80px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--me-border-15); border-radius: var(--me-radius-lg); overflow: hidden; background: var(--me-surface); }
+  .cell { padding: 28px 28px 30px; border-right: 1px solid var(--me-border); display: flex; flex-direction: column; gap: 10px; min-height: 220px; }
+  .cell:last-child { border-right: 0; }
+  .num { font-family: var(--me-font-mono); font-size: 12px; color: var(--me-ink-35); }
+  .cell h3 { font-size: 26px; font-weight: var(--me-weight-display); letter-spacing: -0.025em; margin: 8px 0 0; line-height: 1.1; }
+  .cell h3 em { font-style: normal; color: var(--me-brand-text); }
+  .cell p { margin: 0; color: var(--me-muted-fg); font-size: 14px; line-height: 1.5; }
+  .bar { height: 6px; border-radius: var(--me-radius-full); background: var(--me-bg-alt); overflow: hidden; margin-top: auto; }
+  .bar span { display: block; height: 100%; background: var(--me-brand); border-radius: inherit; }
+  .meta-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; }
+  .meta-row span:last-child { color: var(--me-ink-50); font-family: var(--me-font-mono); }
+  .cell-brand { background: var(--me-brand); color: #fff; }
+  .cell-brand .num { color: #FFFFFFB3; }
+  .cell-brand p { color: #FFFFFFE6; }
+  .cell-brand h3 { font-size: 22px; }
+  .go { margin-top: auto; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+  .go i { width: 40px; height: 40px; border-radius: 50%; border: 1px solid currentColor; display: grid; place-items: center; opacity: .9; }
+  .cell:not(.cell-brand) .go { color: var(--me-brand-text); }
+
+  .section-head { display: flex; align-items: flex-end; justify-content: space-between; margin: 56px 0 20px; }
+  .kicker { font-size: 13px; font-weight: 600; letter-spacing: var(--me-tracking-eyebrow); text-transform: uppercase; color: var(--me-brand-text); }
+  .section-head h2 { font-size: 40px; font-weight: var(--me-weight-display); letter-spacing: -0.025em; margin: 8px 0 0; }
+  .link { color: var(--me-brand-text); font-weight: 600; display: inline-flex; gap: 6px; align-items: center; font-size: 15px; }
+
+  .cols { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; }
+  .panel { background: var(--me-surface); border: 1px solid var(--me-border-15); border-radius: var(--me-radius-lg); }
+  .row { display: flex; gap: 16px; align-items: flex-start; padding: 18px 24px; border-top: 1px solid var(--me-border); }
+  .row:first-child { border-top: 0; }
+  .ic { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--me-bg-alt); color: var(--me-ink); }
+  .ic.ok { background: var(--app-ok-soft); color: var(--app-ok); }
+  .ic.brand { background: #FF5C351F; color: var(--me-brand-text); }
+  .row .t { font-weight: 600; font-size: 15px; }
+  .row .m { font-size: 13px; color: var(--me-ink-50); margin-top: 3px; }
+  .tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; padding: 3px 7px; border-radius: var(--me-radius-xs); border: 1px solid var(--me-ink-25); color: var(--me-ink-50); margin-left: 8px; vertical-align: 2px; }
+  .tag.brand { border-color: #FF5C3566; color: var(--me-brand-text); background: #FF5C3514; }
+
+  .tabbar { display: none; }
+  @media (max-width: 900px) {
+    .wrap { padding: 0 20px; }
+    header .wrap { height: 64px; }
+    .logo { height: 34px; }
+    nav.top, .app-id, header .btn { display: none; }
+    .avatar { margin-left: auto; }
+    .hero { padding: 36px 0 40px; }
+    .hero h1 { font-size: 40px; }
+    .eyebrow { letter-spacing: .15em; font-size: 12px; }
+    .grid4 { grid-template-columns: 1fr 1fr; }
+    .cell { min-height: 0; border-bottom: 1px solid var(--me-border); }
+    .cell:nth-child(2n) { border-right: 0; }
+    .cell h3 { font-size: 20px; }
+    .section-head h2 { font-size: 28px; }
+    .cols { grid-template-columns: 1fr; }
+    main { padding-bottom: 110px; }
+    .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; background: var(--me-bg); border-top: 1px solid var(--me-border-15); padding: 8px 4px 14px; z-index: 5; }
+    .tabbar a { display: grid; justify-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--me-ink-50); }
+    .tabbar a[aria-current] { color: var(--me-brand-text); }
+    .tabbar svg.i { width: 22px; height: 22px; }
+  }
+  @media (max-width: 480px) { .grid4 { grid-template-columns: 1fr; } .cell { border-right: 0 !important; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="house" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="list-checks" viewBox="0 0 24 24"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></symbol>
+  <symbol id="archive" viewBox="0 0 24 24"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></symbol>
+  <symbol id="alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v4l4 2"/></symbol>
+  <symbol id="radio" viewBox="0 0 24 24"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/></symbol>
+  <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="mega" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol>
+  <symbol id="user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap">
+    <img class="logo" src="../../assets/logo/logo-black.svg" alt="Missão Encorajamento" width="190" height="57">
+    <div class="app-id">Controle Interação<br>Rádio Encorajamento</div>
+    <nav class="top">
+      <a href="#" aria-current="page">Painel</a><a href="#">Montagem</a><a href="#">Desmontagem</a><a href="#">Central</a><a href="#">Histórico</a>
+    </nav>
+    <a class="btn btn-outline-brand" href="#">Registrar problema</a>
+    <div class="avatar"><svg class="i"><use href="#user"/></svg></div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Domingo · 23 nov · Culto 10h30</div>
+      <h1>Bom dia,<br><em>Ana.</em></h1>
+      <p>Operadora de áudio hoje. A montagem está em andamento. Faltam 5 etapas para a rádio ficar pronta.</p>
+    </div>
+    <div>
+      <div class="live"><b></b>Rádio Encorajamento · no ar</div>
+      <div class="actions">
+        <a class="btn btn-brand" href="#">Continuar montagem <svg class="i" style="width:16px;height:16px"><use href="#arrow"/></svg></a>
+        <a class="btn btn-outline-light" href="#"><svg class="i" style="width:16px;height:16px"><use href="#radio"/></svg> Ouvir ao vivo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+    <div class="grid4">
+      <a class="cell" href="#">
+        <span class="num">01</span>
+        <h3>Montagem <em>em curso</em></h3>
+        <p>Estrutura e conexão concluídas. Faltam os testes de áudio.</p>
+        <div class="meta-row"><span>6 de 11 etapas</span><span>55%</span></div>
+        <div class="bar"><span style="width:55%"></span></div>
+      </a>
+      <a class="cell" href="#">
+        <span class="num">02</span>
+        <h3>Desmontagem</h3>
+        <p>Começa ao fim do culto, depois de encerrar a transmissão.</p>
+        <div class="meta-row"><span>0 de 9 etapas</span><span>0%</span></div>
+        <div class="bar"><span style="width:0"></span></div>
+      </a>
+      <a class="cell" href="#">
+        <span class="num">03</span>
+        <h3><em>1</em> problema aberto</h3>
+        <p>Wi-Fi reserva lento. Prioridade média.</p>
+        <span class="go"><i><svg class="i" style="width:16px;height:16px"><use href="#arrow"/></svg></i>Ver central</span>
+      </a>
+      <a class="cell cell-brand" href="#">
+        <span class="num">04</span>
+        <h3>Chegada da equipe às 8h.</h3>
+        <p>Comunicado da coordenação: passagem de som com a banda às 8h30.</p>
+        <span class="go"><i><svg class="i" style="width:16px;height:16px"><use href="#arrow"/></svg></i>Comunicados</span>
+      </a>
+    </div>
+
+    <div class="section-head">
+      <div><div class="kicker">Equipe de serviço</div><h2>Atividade de hoje</h2></div>
+      <a class="link" href="#">Histórico completo <svg class="i" style="width:16px;height:16px"><use href="#arrow"/></svg></a>
+    </div>
+
+    <div class="cols">
+      <div class="panel">
+        <div class="row"><div class="ic ok"><svg class="i"><use href="#check"/></svg></div><div><div class="t">Ligar computador e abrir o software de transmissão <span class="tag">Montagem</span></div><div class="m">Ana Souza · 08h14</div></div></div>
+        <div class="row"><div class="ic brand"><svg class="i"><use href="#alert"/></svg></div><div><div class="t">Wi-Fi reserva lento <span class="tag brand">Média</span></div><div class="m">Registrado por Pedro Lima · 08h09</div></div></div>
+        <div class="row"><div class="ic ok"><svg class="i"><use href="#check"/></svg></div><div><div class="t">Testar internet (cabo e Wi-Fi reserva) <span class="tag">Montagem</span></div><div class="m">Pedro Lima · 08h06</div></div></div>
+        <div class="row"><div class="ic"><svg class="i"><use href="#mega"/></svg></div><div><div class="t">Comunicado publicado: Escala de domingo</div><div class="m">Coordenação · 07h40</div></div></div>
+      </div>
+      <div class="panel">
+        <div class="row"><div><div class="kicker" style="font-size:11px">Escala de hoje</div></div></div>
+        <div class="row"><div class="ic">AS</div><div><div class="t">Ana Souza</div><div class="m">Operadora de áudio</div></div></div>
+        <div class="row"><div class="ic">PL</div><div><div class="t">Pedro Lima</div><div class="m">Transmissão</div></div></div>
+        <div class="row"><div class="ic">MC</div><div><div class="t">Marina Costa</div><div class="m">Locução</div></div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav class="tabbar">
+  <a href="#" aria-current="page"><svg class="i"><use href="#house"/></svg>Painel</a>
+  <a href="#"><svg class="i"><use href="#list-checks"/></svg>Montagem</a>
+  <a href="#"><svg class="i"><use href="#archive"/></svg>Desmontagem</a>
+  <a href="#"><svg class="i"><use href="#alert"/></svg>Central</a>
+  <a href="#"><svg class="i"><use href="#history"/></svg>Histórico</a>
+</nav>
+</body>
+</html>

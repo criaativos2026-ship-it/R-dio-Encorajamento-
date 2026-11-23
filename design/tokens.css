@@ -1,0 +1,70 @@
+/* =====================================================================
+   DESIGN TOKENS — Controle Interação · Rádio Encorajamento
+   Fonte: CSS de produção de https://www.missaoencorajamento.com.br/
+   (arquivo /_next/static/css/436e6a94bcad784a.css, lido em 23/11/2026)
+
+   Os valores marcados [SITE] foram copiados literalmente do site.
+   Os marcados [SITE · oklch→hex] são variáveis oklch do site convertidas
+   para HEX por cálculo (sem arredondamento manual).
+   Os marcados [APP] NÃO existem no site: são estados funcionais do app
+   (ex.: "concluído") e estão separados da paleta institucional.
+   ===================================================================== */
+
+:root {
+  /* ---------- Marca ---------- */
+  --me-brand:          #FF5C35; /* [SITE] --sc-brand · cor da logo, botões e destaques */
+  --me-brand-hover:    #E04D2A; /* [SITE] --sc-brand-hover */
+  --me-brand-text:     #C94820; /* [SITE] --sc-brand-text · laranja para TEXTO sobre fundo claro */
+  --me-brand-soft:     #FF8A5C; /* [SITE] usado como 2ª cor em degradês de títulos */
+  --me-on-brand:       #FFFFFF; /* [SITE] texto dos botões laranja */
+
+  /* ---------- Superfícies e texto (tema claro) ---------- */
+  --me-bg:             #FFFFFF; /* [SITE] --sc-bg */
+  --me-bg-alt:         #F5F5F5; /* [SITE] --sc-bg-alt */
+  --me-surface:        #FFFFFF; /* [SITE] --sc-surface */
+  --me-ink:            #1D1D1B; /* [SITE] --sc-text · cor de texto/títulos */
+  --me-ink-50:         #1D1D1B80; /* [SITE] --sc-text-50 */
+  --me-ink-35:         #1D1D1B59; /* [SITE] --sc-text-35 */
+  --me-ink-25:         #1D1D1B40; /* [SITE] --sc-text-25 */
+  --me-border:         #1D1D1B14; /* [SITE] --sc-border */
+  --me-border-15:      #1D1D1B26; /* [SITE] --sc-border-15 */
+  --me-muted-fg:       #555555; /* [SITE · oklch→hex] --muted-foreground oklch(45% 0 0) */
+  --me-destructive:    #E7000B; /* [SITE · oklch→hex] --destructive oklch(57.7% .245 27.325) */
+
+  /* ---------- Estados funcionais do app ---------- */
+  --app-ok:            #1E8E5A; /* [APP] etapa concluída / problema resolvido */
+  --app-ok-soft:       #1E8E5A1A;
+
+  /* ---------- Tipografia ---------- */
+  --me-font-sans: "Inter", "Inter Fallback", system-ui, -apple-system, sans-serif; /* [SITE] next/font Inter 100–900 */
+  --me-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* [SITE] números "01", "02" */
+  --me-weight-display: 900;   /* [SITE] h2/h3 */
+  --me-tracking-display: -0.025em; /* [SITE] h2 72px → -1.8px */
+  --me-tracking-eyebrow: 0.3em;    /* [SITE] 14px → 4.2px, maiúsculas */
+
+  /* ---------- Bordas ---------- */
+  --me-radius:     0.45rem;                       /* [SITE] --radius (7.2px) */
+  --me-radius-xs:  calc(var(--me-radius) * .6);   /* [SITE] 4.32px · etiquetas */
+  --me-radius-sm:  calc(var(--me-radius) * .8);   /* [SITE] 5.76px · links/menus */
+  --me-radius-md:  calc(var(--me-radius) * 1.4);  /* [SITE] 10.08px */
+  --me-radius-lg:  calc(var(--me-radius) * 1.8);  /* [SITE] 12.96px · botões, campos, cartões */
+  --me-radius-xl:  32px;                          /* [SITE] cartões grandes com imagem */
+  --me-radius-full: 9999px;                       /* [SITE] botões-pílula, avatar */
+
+  /* ---------- Espaçamento ---------- */
+  --me-space: 0.25rem; /* [SITE] --spacing (escala Tailwind: 4px) */
+}
+
+/* Tema escuro — [SITE] seletor .dark */
+.dark {
+  --me-bg:        #0E0E0D;
+  --me-bg-alt:    #161615;
+  --me-surface:   #1D1D1B;
+  --me-ink:       #FFFFFF;
+  --me-ink-50:    #FFFFFF80;
+  --me-ink-35:    #FFFFFF59;
+  --me-ink-25:    #FFFFFF40;
+  --me-border:    #FFFFFF14;
+  --me-border-15: #FFFFFF26;
+  --me-brand-text:#FF5C35;
+}

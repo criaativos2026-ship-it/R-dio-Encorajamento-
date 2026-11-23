@@ -2,18 +2,10 @@
 
 Ferramenta da equipe de serviço da Missão Encorajamento para organizar as transmissões da Rádio Encorajamento.
 
-## Telas
-- **Identificação:** nome e função do voluntário no dia.
-- **Painel:** progresso da montagem e da desmontagem, problemas abertos, atividade recente e comunicados.
-- **Checklists de montagem e desmontagem:** cada item marcado registra quem marcou e quando.
-- **Central:** registro e resolução de problemas, com prioridade, e mural de comunicados.
-- **Histórico:** linha do tempo de tudo que foi feito.
+## Status: em validação
+Antes da implementação final, veja:
+- [`docs/VALIDACAO-IDENTIDADE-E-STACK.md`](docs/VALIDACAO-IDENTIDADE-E-STACK.md): análise do site, paleta HEX, tipografia, tecnologias e stack recomendada.
+- [`design/tokens.css`](design/tokens.css): design tokens com os valores oficiais extraídos do site.
+- [`docs/proposta/tela-inicial.html`](docs/proposta/tela-inicial.html): proposta visual da tela inicial.
 
-## Como usar
-App estático, sem instalação. Abra `index.html` no navegador ou publique a pasta em qualquer hospedagem estática (GitHub Pages, Netlify).
-Por enquanto, os dados ficam salvos no próprio aparelho (`localStorage`).
-
-Os itens dos checklists são exemplos e podem ser editados em `CHECKLISTS`, no início de `js/app.js`.
-
-## Identidade visual
-⚠ **Provisória.** Veja [`docs/IDENTIDADE-VISUAL.md`](docs/IDENTIDADE-VISUAL.md).
+O protótipo estático da raiz (`index.html`, `css/`, `js/`) foi o primeiro rascunho, feito com cores provisórias. Ele será substituído pela versão em Next.js após a validação.
