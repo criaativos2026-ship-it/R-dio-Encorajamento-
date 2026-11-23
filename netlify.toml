@@ -1,0 +1,9 @@
+# Netlify: o adaptador oficial de Next.js é aplicado automaticamente.
+# O banco (Netlify Database) é criado pela Netlify e as migrações de
+# netlify/database/migrations/ são aplicadas antes de cada publicação.
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
