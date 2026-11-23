@@ -67,6 +67,10 @@ npm run start                   # porta 3000 (use PORT=xxxx para mudar)
 - Use **HTTPS**. O app pode ser instalado na tela inicial do celular (PWA).
 - Funciona em qualquer hospedagem Node.js com PostgreSQL (servidor próprio com Docker, Vercel + Neon/Supabase etc.).
 
+### Link para avaliação (Vercel + Neon)
+
+Passo a passo em [`docs/PUBLICAR-VERCEL.md`](docs/PUBLICAR-VERCEL.md). O script `vercel-build` aplica as migrações e o seed automaticamente.
+
 ## Estrutura
 
 ```
