@@ -1,4 +1,5 @@
-export const FUNCOES = ["Operação de áudio", "Locução", "Transmissão", "Apoio técnico", "Coordenação"] as const;
+/** Funções de serviço da equipe (definidas pela igreja). */
+export const FUNCOES = ["Diretor de Transmissão", "Operador da Rádio"] as const;
 
 export const CHECKLIST_LABEL = { montagem: "Montagem", desmontagem: "Desmontagem" } as const;
 

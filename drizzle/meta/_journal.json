@@ -29,6 +29,13 @@
       "when": 1795453398556,
       "tag": "0003_lgpd",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795456518753,
+      "tag": "0004_funcoes_da_igreja",
+      "breakpoints": true
     }
   ]
 }

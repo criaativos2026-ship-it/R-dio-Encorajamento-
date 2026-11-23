@@ -8,6 +8,7 @@ import { signIn, signOut } from "@/auth";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { logActivity } from "@/lib/activity";
+import { FUNCOES } from "@/lib/constants";
 import { countUsers } from "@/lib/queries";
 import type { FormState } from "./types";
 
@@ -48,7 +49,7 @@ export async function setupFirstUser(_: FormState, form: FormData): Promise<Form
   const { name, email, password, role } = parsed.data;
   const [user] = await db
     .insert(users)
-    .values({ name, email, passwordHash: await bcrypt.hash(password, 12), role, defaultFunction: "Coordenação" })
+    .values({ name, email, passwordHash: await bcrypt.hash(password, 12), role, defaultFunction: FUNCOES[0] })
     .returning();
   await logActivity("sistema", "Configurou o Controle Interação", user.id);
   await signIn("credentials", { email, password, redirectTo: "/" });
