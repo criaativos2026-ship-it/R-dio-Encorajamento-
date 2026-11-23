@@ -2,6 +2,7 @@
 
 import { useActionState, useState, useTransition } from "react";
 import { toast } from "sonner";
+import { anonymizeUser } from "@/app/actions/privacidade";
 import { createUser, resetUserPassword, setUserActive, setUserRole } from "@/app/actions/team";
 import { ConfirmButton } from "@/components/confirm-button";
 import { Field, FormError, useFormFeedback } from "@/components/form";
@@ -16,7 +17,7 @@ import { FUNCOES, PERFIL_LABEL, PERFIS, PERFIS_GESTAO, type Perfil } from "@/lib
 import { initials } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-type Member = { id: string; name: string; email: string; role: Perfil; active: boolean; defaultFunction: string | null };
+type Member = { id: string; name: string; email: string; role: Perfil; active: boolean; defaultFunction: string | null; deletionRequestedAt: Date | null };
 
 export function CreateUserForm() {
   const [state, action] = useActionState(createUser, undefined);
@@ -94,6 +95,7 @@ export function MemberRow({ member, isMe }: { member: Member; isMe: boolean }) {
             {member.name} {isMe && <span className="text-xs font-normal text-ink-50">(você)</span>}
             <Badge variant={PERFIS_GESTAO.includes(member.role) ? "brand" : "outline"}>{PERFIL_LABEL[member.role]}</Badge>
             {!member.active && <Badge variant="outline">Desativado</Badge>}
+            {member.deletionRequestedAt && <Badge variant="default">Pediu exclusão</Badge>}
           </p>
           <p className="truncate text-[13px] text-ink-50">
             {member.email}
@@ -148,6 +150,18 @@ export function MemberRow({ member, isMe }: { member: Member; isMe: boolean }) {
                 Reativar
               </Button>
             ))}
+          {!isMe && (
+            <ConfirmButton
+              variant={member.deletionRequestedAt ? "default" : "destructive"}
+              title={`Excluir os dados de ${member.name}?`}
+              description="Nome, e-mail, senha e função serão apagados e o acesso encerrado. Nos registros antigos dos cultos a pessoa passa a aparecer como “Pessoa removida”. Isso não pode ser desfeito."
+              confirmLabel="Excluir dados"
+              successMessage="Dados excluídos (anonimizados)."
+              onConfirm={() => anonymizeUser(member.id)}
+            >
+              Excluir dados
+            </ConfirmButton>
+          )}
         </div>
       </div>
       <CollapsibleContent>

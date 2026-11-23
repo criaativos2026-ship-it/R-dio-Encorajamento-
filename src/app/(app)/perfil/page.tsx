@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LogOut, Users } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { PasswordForm, ProfileForm } from "@/components/perfil-forms";
+import { MeusDadosPrivacidade } from "@/components/privacidade-perfil";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/heading";
 import { Panel, PanelHeader } from "@/components/panel";
@@ -43,6 +44,10 @@ export default async function Perfil() {
         <Panel className="self-start">
           <PanelHeader title="Senha" />
           <PasswordForm />
+        </Panel>
+        <Panel className="self-start md:col-span-2">
+          <PanelHeader kicker="LGPD" title="Meus dados e privacidade" />
+          <MeusDadosPrivacidade acceptedAt={user.privacyAcceptedAt} version={user.privacyVersion} deletionRequestedAt={user.deletionRequestedAt} />
         </Panel>
       </div>
     </main>

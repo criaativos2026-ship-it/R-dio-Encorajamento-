@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard as Users, LogOut, UserRound } from "lucide-react";
+import { LayoutDashboard as Users, LogOut, ShieldCheck, UserRound } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -41,6 +41,11 @@ export function UserMenu({ name, email, role, gestao }: { name: string; email: s
             </Link>
           </DropdownMenuItem>
         )}
+        <DropdownMenuItem asChild>
+          <Link href="/privacidade">
+            <ShieldCheck /> Privacidade
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onSelect={() => logout()}>
           <LogOut className="text-destructive" /> Sair

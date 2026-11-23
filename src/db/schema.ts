@@ -28,6 +28,7 @@ export const activityType = pgEnum("activity_type", [
   "culto",
   "escala",
   "sistema",
+  "privacidade",
 ]);
 
 /** Equipe de serviço: voluntários e gestão (pastor, líder, coordenação). */
@@ -42,6 +43,11 @@ export const users = pgTable(
     defaultFunction: varchar("default_function", { length: 60 }),
     active: boolean("active").notNull().default(true),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    // LGPD: aceite do aviso de privacidade (versão e momento), pedido de exclusão e anonimização
+    privacyAcceptedAt: timestamp("privacy_accepted_at", { withTimezone: true }),
+    privacyVersion: varchar("privacy_version", { length: 20 }),
+    deletionRequestedAt: timestamp("deletion_requested_at", { withTimezone: true }),
+    anonymizedAt: timestamp("anonymized_at", { withTimezone: true }),
   },
   (t) => [uniqueIndex("users_email_idx").on(t.email)],
 );

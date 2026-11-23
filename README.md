@@ -16,6 +16,22 @@ A identidade visual segue o site oficial ([missaoencorajamento.com.br](https://w
 | **Gestão** (pastor, líder, coordenação) | Visão geral e **relatório de cada culto** (escala, quem marcou cada item e quando, problemas, pendências, linha do tempo, impressão/PDF), cadastro de pessoas e perfis, e edição dos checklists. |
 | **Perfil** | Nome, função principal, troca de senha e saída. |
 
+## Privacidade (LGPD)
+
+| Recurso | Onde |
+|---|---|
+| **Aviso de privacidade** público | `/privacidade` (link no login, no menu da conta e no Perfil) |
+| **Aceite obrigatório** (versão + data, registrado no histórico) | `/aceite` — sem aceitar, nenhuma tela ou ação funciona |
+| **Baixar meus dados** (JSON, sem senha) | Perfil → Meus dados e privacidade (`/api/meus-dados`) |
+| **Trocar e-mail** (confirmado pela senha) | Perfil → Meus dados e privacidade |
+| **Pedir exclusão** / cancelar pedido | Perfil → Meus dados e privacidade |
+| **Excluir dados (anonimização)** | Gestão → Pessoas → Excluir dados: apaga nome, e-mail, senha e função; o nome vira “Pessoa removida” no histórico, problemas e comunicados |
+| **Limpeza por prazo** | Cultos encerrados, histórico, problemas resolvidos e comunicados não fixados com mais de `RETENCAO_DIAS` são apagados (ao abrir a Gestão) |
+
+Configuração em `src/lib/privacidade.ts`:
+- ⚠ **PENDENTE:** `CONTATO_PRIVACIDADE` (responsável e e-mail) e confirmação de `RETENCAO_DIAS` (provisório: 730 dias).
+- `AVISO_VERSAO`: aumente quando o aviso mudar de forma relevante — todos aceitam de novo no próximo acesso.
+
 ## Perfis de acesso
 
 | Perfil | Acesso |

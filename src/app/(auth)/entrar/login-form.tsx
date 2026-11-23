@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { login } from "@/app/actions/auth";
 import { Field, FormError } from "@/components/form";
@@ -21,6 +22,11 @@ export function LoginForm() {
         Entrar
       </SubmitButton>
       <p className="text-center text-xs text-ink-50">Esqueceu a senha? Fale com a liderança da equipe.</p>
+      <p className="text-center text-xs">
+        <Link href="/privacidade" className="font-semibold text-brand-text underline-offset-4 hover:underline">
+          Aviso de privacidade
+        </Link>
+      </p>
     </form>
   );
 }
