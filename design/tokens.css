@@ -6,8 +6,8 @@
    Os valores marcados [SITE] foram copiados literalmente do site.
    Os marcados [SITE · oklch→hex] são variáveis oklch do site convertidas
    para HEX por cálculo (sem arredondamento manual).
-   Os marcados [APP] NÃO existem no site: são estados funcionais do app
-   (ex.: "concluído") e estão separados da paleta institucional.
+   Estados do app usam apenas cores do site (decisão aprovada: "concluído"
+   em preto-grafite, laranja para ação/atenção).
    ===================================================================== */
 
 :root {
@@ -31,9 +31,10 @@
   --me-muted-fg:       #555555; /* [SITE · oklch→hex] --muted-foreground oklch(45% 0 0) */
   --me-destructive:    #E7000B; /* [SITE · oklch→hex] --destructive oklch(57.7% .245 27.325) */
 
-  /* ---------- Estados funcionais do app ---------- */
-  --app-ok:            #1E8E5A; /* [APP] etapa concluída / problema resolvido */
-  --app-ok-soft:       #1E8E5A1A;
+  /* ---------- Estados do app (somente cores do site) ---------- */
+  --app-done:          var(--me-ink);     /* concluído / resolvido */
+  --app-done-soft:     var(--me-bg-alt);
+  --app-attention:     var(--me-brand);   /* em andamento / aberto */
 
   /* ---------- Tipografia ---------- */
   --me-font-sans: "Inter", "Inter Fallback", system-ui, -apple-system, sans-serif; /* [SITE] next/font Inter 100–900 */

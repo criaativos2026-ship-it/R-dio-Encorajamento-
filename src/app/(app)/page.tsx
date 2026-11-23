@@ -1,0 +1,206 @@
+import Link from "next/link";
+import { ArrowRight, Radio } from "lucide-react";
+import { ActivityList } from "@/components/activity-list";
+import { CloseServiceButton } from "@/components/painel/close-service";
+import { OpenServiceForm } from "@/components/painel/open-service-form";
+import { JoinRoster, LeaveRoster } from "@/components/painel/roster";
+import { ButtonLink, buttonClass } from "@/components/ui/button";
+import { Eyebrow, Hl } from "@/components/ui/heading";
+import { Panel, PanelHeader, Row } from "@/components/ui/panel";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/cn";
+import { FUNCOES, SEVERIDADE } from "@/lib/constants";
+import { firstName, greeting, initials, serviceDate, todayISO, when } from "@/lib/format";
+import { getActiveService, getActivities, getNotices, getProblems, getProgress, getRoster } from "@/lib/queries";
+import { isCoordenacao, requireUser } from "@/lib/session";
+
+export const metadata = { title: "Painel" };
+
+const RADIO_URL = "https://radioencorajamento.com.br/"; // mesmo link usado no site da igreja
+
+export default async function Painel() {
+  const user = await requireUser();
+  const service = await getActiveService();
+  const [montagem, desmontagem, openProblems, notices, activity, roster] = await Promise.all([
+    getProgress("montagem", service?.id ?? null),
+    getProgress("desmontagem", service?.id ?? null),
+    getProblems({ onlyOpen: true, limit: 3 }),
+    getNotices(1),
+    getActivities(6),
+    service ? getRoster(service.id) : Promise.resolve([]),
+  ]);
+  const me = roster.find((r) => r.userId === user.id);
+  const defaultFunction = user.defaultFunction ?? FUNCOES[0];
+  const notice = notices[0];
+  const pending = montagem.total - montagem.completed + (desmontagem.total - desmontagem.completed);
+
+  let summary: string;
+  let next: { href: string; label: string } | null = null;
+  if (!service) summary = "Nenhum culto aberto. Abra o culto de hoje para começar a montagem.";
+  else if (montagem.pct < 100) {
+    const faltam = montagem.total - montagem.completed;
+    summary = montagem.completed === 0 ? "A montagem ainda não começou." : `A montagem está em andamento. ${faltam === 1 ? "Falta 1 etapa" : `Faltam ${faltam} etapas`} para a rádio ficar pronta.`;
+    next = { href: "/checklist/montagem", label: montagem.completed === 0 ? "Iniciar montagem" : "Continuar montagem" };
+  } else if (desmontagem.pct < 100) {
+    summary = "Montagem concluída. Rádio pronta. Ao fim do culto, siga para a desmontagem.";
+    next = { href: "/checklist/desmontagem", label: desmontagem.completed ? "Continuar desmontagem" : "Iniciar desmontagem" };
+  } else summary = "Montagem e desmontagem concluídas. Obrigado pelo serviço!";
+
+  return (
+    <>
+      {/* Faixa escura: mesmo padrão do topo do site */}
+      <section className="bg-night text-white">
+        <div className="mx-auto grid max-w-[1200px] gap-8 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <Eyebrow light>{service ? `${serviceDate(service.date)} · ${service.title}${service.time ? ` ${service.time.replace(":", "h")}` : ""}` : serviceDate(todayISO())}</Eyebrow>
+            <h1 className="mt-5 text-[44px] leading-[1.02] font-black tracking-display sm:text-[64px]">
+              {greeting()},
+              <br />
+              <span className="text-brand">{firstName(user.name)}.</span>
+            </h1>
+            <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-white/60 sm:text-base">
+              {me ? `${me.function} hoje. ` : ""}
+              {summary}
+            </p>
+          </div>
+          {service ? (
+            <div className="flex flex-wrap gap-3">
+              {next && (
+                <ButtonLink href={next.href} size="lg">
+                  {next.label} <ArrowRight className="size-4" />
+                </ButtonLink>
+              )}
+              <a href={RADIO_URL} target="_blank" rel="noopener noreferrer" className={buttonClass("outline-light", "lg")}>
+                <Radio className="size-4" /> Ouvir a rádio
+              </a>
+              {isCoordenacao(user) && <CloseServiceButton pending={pending} />}
+            </div>
+          ) : (
+            <div className="w-full lg:w-[380px]">
+              <OpenServiceForm today={todayISO()} defaultFunction={defaultFunction} />
+            </div>
+          )}
+        </div>
+      </section>
+
+      <main className="mx-auto max-w-[1200px] px-5 py-10 sm:px-8 sm:py-12">
+        {/* Grade numerada: mesmo desenho do bloco "Identidade" do site */}
+        <div className="grid overflow-hidden rounded-lg border border-line-15 bg-surface sm:grid-cols-2 xl:grid-cols-4">
+          <StatusCell n="01" href="/checklist/montagem" title="Montagem" progress={montagem} active={!!service} />
+          <StatusCell n="02" href="/checklist/desmontagem" title="Desmontagem" progress={desmontagem} active={!!service} />
+          <Link href="/central" className="flex flex-col gap-2.5 border-b border-line p-6 transition-colors hover:bg-bg-alt/60 sm:p-7 xl:border-r xl:border-b-0">
+            <span className="font-mono text-xs text-ink-35">03</span>
+            <h3 className="mt-1 text-[22px] leading-tight font-black tracking-display sm:text-[26px]">
+              {openProblems.length ? (
+                <>
+                  <Hl>{openProblems.length}</Hl> {openProblems.length === 1 ? "problema aberto" : "problemas abertos"}
+                </>
+              ) : (
+                "Nenhum problema aberto"
+              )}
+            </h3>
+            <p className="text-sm leading-relaxed text-muted">
+              {openProblems[0] ? `${openProblems[0].title}. Prioridade ${SEVERIDADE[openProblems[0].severity].toLowerCase()}.` : "Tudo certo por aqui."}
+            </p>
+            <GoLink>Ver central</GoLink>
+          </Link>
+          <Link href="/central?aba=comunicados" className="flex flex-col gap-2.5 bg-brand p-6 text-white transition-colors hover:bg-brand-hover sm:p-7">
+            <span className="font-mono text-xs text-white/70">04</span>
+            <h3 className="mt-1 text-[22px] leading-tight font-black tracking-display">{notice ? notice.title : "Nenhum comunicado"}</h3>
+            <p className="line-clamp-3 text-sm leading-relaxed text-white/90">{notice ? notice.body : "Os comunicados da coordenação aparecem aqui."}</p>
+            <GoLink light>Comunicados</GoLink>
+          </Link>
+        </div>
+
+        <div className="mt-14 mb-5 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-eyebrow text-brand-text">Equipe de serviço</p>
+            <h2 className="mt-2 text-[28px] font-black tracking-display sm:text-[40px]">Atividade recente</h2>
+          </div>
+          <Link href="/historico" className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-brand-text hover:underline">
+            Histórico completo <ArrowRight className="size-4" />
+          </Link>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+          <Panel>
+            <ActivityList items={activity} />
+          </Panel>
+          <Panel className="self-start">
+            <PanelHeader kicker="Escala de hoje" action={me ? <LeaveRoster /> : undefined} />
+            {!service ? (
+              <p className="px-6 py-8 text-sm text-ink-50">A escala aparece quando um culto for aberto.</p>
+            ) : roster.length === 0 ? (
+              <p className="px-6 py-8 text-sm text-ink-50">Ninguém na escala ainda.</p>
+            ) : (
+              roster.map((r) => (
+                <Row key={r.userId} className="items-center">
+                  <span className={cn("grid size-9 shrink-0 place-items-center rounded-full text-xs font-bold", r.userId === user.id ? "bg-ink text-white" : "bg-bg-alt text-ink")}>{initials(r.name)}</span>
+                  <div>
+                    <p className="text-[15px] font-semibold">{r.name}</p>
+                    <p className="text-[13px] text-ink-50">{r.function}</p>
+                  </div>
+                </Row>
+              ))
+            )}
+            {service && !me && <JoinRoster defaultFunction={defaultFunction} />}
+          </Panel>
+        </div>
+        {service && <p className="mt-6 text-xs text-ink-35">Culto aberto {when(service.createdAt).toLowerCase()}.</p>}
+      </main>
+    </>
+  );
+}
+
+function StatusCell({
+  n,
+  href,
+  title,
+  progress,
+  active,
+}: {
+  n: string;
+  href: string;
+  title: string;
+  progress: { total: number; completed: number; pct: number; pendingGroups: string[]; doneGroups: string[] };
+  active: boolean;
+}) {
+  const done = progress.pct === 100;
+  const state = !active ? null : done ? "concluída" : progress.completed > 0 ? "em curso" : null;
+  const detail = !active
+    ? "Disponível quando um culto for aberto."
+    : done
+      ? "Todas as etapas concluídas."
+      : progress.completed === 0
+        ? `${progress.total} etapas em ${progress.pendingGroups.length} grupos.`
+        : `${progress.doneGroups.length ? `${progress.doneGroups.join(", ")} ${progress.doneGroups.length > 1 ? "concluídos" : "concluído"}. ` : ""}Falta: ${progress.pendingGroups.join(", ")}.`;
+  return (
+    <Link href={href} className="flex flex-col gap-2.5 border-b border-line p-6 transition-colors hover:bg-bg-alt/60 sm:p-7 sm:odd:border-r xl:border-r xl:border-b-0">
+      <span className="font-mono text-xs text-ink-35">{n}</span>
+      <h3 className="mt-1 text-[22px] leading-tight font-black tracking-display sm:text-[26px]">
+        {title} {state && (done ? <span>{state}</span> : <Hl>{state}</Hl>)}
+      </h3>
+      <p className="text-sm leading-relaxed text-muted">{detail}</p>
+      <div className="mt-auto pt-3">
+        <div className="mb-2.5 flex justify-between text-[13px] font-semibold">
+          <span>
+            {progress.completed} de {progress.total} etapas
+          </span>
+          <span className="font-mono text-ink-50">{progress.pct}%</span>
+        </div>
+        <Progress pct={progress.pct} label={`Progresso da ${title.toLowerCase()}`} />
+      </div>
+    </Link>
+  );
+}
+
+function GoLink({ children, light }: { children: React.ReactNode; light?: boolean }) {
+  return (
+    <span className={cn("mt-auto inline-flex items-center gap-3 pt-3 text-xs font-bold tracking-[0.15em] uppercase", light ? "text-white" : "text-brand-text")}>
+      <span className="grid size-10 place-items-center rounded-full border border-current">
+        <ArrowRight className="size-4" />
+      </span>
+      {children}
+    </span>
+  );
+}

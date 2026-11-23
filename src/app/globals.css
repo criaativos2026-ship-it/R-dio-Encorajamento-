@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@import "../../design/tokens.css";
+
+/* Liga os tokens oficiais ao Tailwind: bg-brand, text-ink, border-line… */
+@theme inline {
+  --font-sans: var(--font-inter), var(--me-font-sans);
+  --font-mono: var(--me-font-mono);
+
+  --color-brand: var(--me-brand);
+  --color-brand-hover: var(--me-brand-hover);
+  --color-brand-text: var(--me-brand-text);
+  --color-brand-soft: var(--me-brand-soft);
+  --color-bg: var(--me-bg);
+  --color-bg-alt: var(--me-bg-alt);
+  --color-surface: var(--me-surface);
+  --color-night: #0E0E0D;
+  --color-night-alt: #161615;
+  --color-ink: var(--me-ink);
+  --color-ink-50: var(--me-ink-50);
+  --color-ink-35: var(--me-ink-35);
+  --color-ink-25: var(--me-ink-25);
+  --color-muted: var(--me-muted-fg);
+  --color-line: var(--me-border);
+  --color-line-15: var(--me-border-15);
+  --color-danger: var(--me-destructive);
+
+  --radius-xs: var(--me-radius-xs);
+  --radius-sm: var(--me-radius-sm);
+  --radius-md: var(--me-radius-md);
+  --radius-lg: var(--me-radius-lg);
+  --radius-xl: var(--me-radius-xl);
+
+  --tracking-display: var(--me-tracking-display);
+  --tracking-eyebrow: var(--me-tracking-eyebrow);
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply bg-bg-alt text-ink antialiased; }
+  :focus-visible { outline: 2px solid var(--me-brand); outline-offset: 2px; }
+  ::selection { background: #FF5C3540; }
+}

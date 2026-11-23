@@ -62,7 +62,7 @@ As cores abaixo estão em `oklch` no site (padrão shadcn/ui) e foram convertida
 | `--border` | oklch(90% 0 0) | #DEDEDE |
 | `--destructive` | oklch(57.7% .245 27.325) | #E7000B |
 
-**Cor que não é do site:** o app precisa de um verde para "concluído/resolvido" (#1E8E5A). O site não tem uma cor equivalente. Ela está separada da paleta institucional (prefixo `--app-`) e é usada só como indicador de estado. Se preferir, posso usar apenas o laranja e o preto também para esses estados.
+**Estados do app (decisão aprovada):** "concluído" e "resolvido" usam o preto-grafite **#1D1D1B**. Laranja indica ação e atenção. Nenhuma cor fora da paleta do site é usada.
 
 ---
 
@@ -138,6 +138,6 @@ A proposta reproduz os padrões do site:
 
 ---
 
-## Próximo passo
+## Status
 
-Depois que você aprovar paleta, tipografia, stack e proposta, a implementação começa em Next.js. O protótipo estático anterior (`index.html`, `css/`, `js/`) será substituído.
+Aprovado. Implementado em Next.js conforme este documento (veja o README).
