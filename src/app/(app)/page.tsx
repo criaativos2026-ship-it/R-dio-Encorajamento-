@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Lock, Radio } from "lucide-react";
 import { ActivityList } from "@/components/activity-list";
+import { HeroVideo } from "@/components/hero-video";
 import { CloseServiceButton } from "@/components/painel/close-service";
 import { OpenServiceForm } from "@/components/painel/open-service-form";
 import { JoinRoster, LeaveRoster } from "@/components/painel/roster";
@@ -50,8 +51,9 @@ export default async function Painel() {
   return (
     <>
       {/* Faixa escura: mesmo padrão do topo do site */}
-      <section className="bg-night text-white">
-        <div className="mx-auto grid max-w-[1200px] gap-8 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1fr_auto] lg:items-end">
+      <section className="relative overflow-hidden bg-night text-white">
+        <HeroVideo />
+        <div className="relative mx-auto grid max-w-[1200px] gap-8 px-5 py-10 sm:px-8 sm:py-14 lg:min-h-[440px] lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
             <Eyebrow light>{service ? `${serviceDate(service.date)} · ${service.title}${service.time ? ` · aberto às ${service.time.replace(":", "h")}` : ""}` : serviceDate(todayISO())}</Eyebrow>
             <h1 className="mt-5 text-[44px] leading-[1.02] font-black tracking-display sm:text-[64px]">

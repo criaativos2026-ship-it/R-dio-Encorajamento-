@@ -1,3 +1,4 @@
+import { HeroVideo } from "@/components/hero-video";
 import { Logo } from "@/components/logo";
 import { Eyebrow } from "@/components/ui/heading";
 
@@ -5,7 +6,8 @@ import { Eyebrow } from "@/components/ui/heading";
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <main className="grid min-h-dvh bg-bg lg:grid-cols-[1.1fr_1fr]">
-      <section className="flex flex-col justify-between gap-12 bg-night px-6 py-8 text-white sm:px-12 sm:py-12">
+      <section className="relative flex flex-col justify-between gap-12 overflow-hidden bg-night px-6 py-8 text-white sm:px-12 sm:py-12 [&>*:not([aria-hidden])]:relative">
+        <HeroVideo />
         <Logo variant="white" height={48} />
         <div>
           <Eyebrow light>Equipe de serviço</Eyebrow>
