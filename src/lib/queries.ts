@@ -53,6 +53,12 @@ export async function getChecklist(kind: ChecklistKind, serviceId: string | null
   return { groups, total, completed, pct: total ? Math.round((completed / total) * 100) : 0 };
 }
 
+/** A desmontagem só é liberada quando todos os itens da montagem do culto estão marcados. */
+export async function isMontagemConcluida(serviceId: string) {
+  const { total, completed } = await getChecklist("montagem", serviceId);
+  return completed >= total;
+}
+
 export async function getProgress(kind: ChecklistKind, serviceId: string | null) {
   const { total, completed, pct, groups } = await getChecklist(kind, serviceId);
   const pendingGroups = groups.filter((g) => g.items.some((i) => !i.done)).map((g) => g.name);

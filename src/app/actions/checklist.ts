@@ -7,7 +7,7 @@ import { db } from "@/db";
 import { checklistItems, checks } from "@/db/schema";
 import { logActivity } from "@/lib/activity";
 import { CHECKLIST_LABEL } from "@/lib/constants";
-import { getActiveService, getChecklist } from "@/lib/queries";
+import { getActiveService, getChecklist, isMontagemConcluida } from "@/lib/queries";
 import { requireGestao, requireUser } from "@/lib/session";
 import type { FormState } from "./types";
 
@@ -22,6 +22,10 @@ export async function toggleCheck(input: { itemId: string; checked: boolean }) {
   const [item] = await db.select().from(checklistItems).where(eq(checklistItems.id, itemId)).limit(1);
   if (!item || !item.active) return { error: "Item não encontrado." };
   const label = CHECKLIST_LABEL[item.kind];
+
+  // Regra da equipe: desmontagem bloqueada até a montagem estar 100% concluída.
+  if (item.kind === "desmontagem" && !(await isMontagemConcluida(service.id)))
+    return { error: "A desmontagem só é liberada depois que a montagem estiver concluída." };
 
   if (checked) {
     const inserted = await db

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Radio } from "lucide-react";
+import { ArrowRight, Lock, Radio } from "lucide-react";
 import { ActivityList } from "@/components/activity-list";
 import { CloseServiceButton } from "@/components/painel/close-service";
 import { OpenServiceForm } from "@/components/painel/open-service-form";
@@ -90,7 +90,7 @@ export default async function Painel() {
         {/* Grade numerada: mesmo desenho do bloco "Identidade" do site */}
         <div className="grid overflow-hidden rounded-2xl border border-line-15 bg-surface sm:grid-cols-2 xl:grid-cols-4">
           <StatusCell n="01" href="/checklist/montagem" title="Montagem" progress={montagem} active={!!service} />
-          <StatusCell n="02" href="/checklist/desmontagem" title="Desmontagem" progress={desmontagem} active={!!service} />
+          <StatusCell n="02" href="/checklist/desmontagem" title="Desmontagem" progress={desmontagem} active={!!service} lockedBy={montagem.pct < 100 ? montagem.total - montagem.completed : 0} />
           <Link href="/central" className="flex flex-col gap-2.5 border-b border-line p-6 transition-colors hover:bg-bg-alt/60 sm:p-7 xl:border-r xl:border-b-0">
             <span className="font-mono text-xs text-ink-35">03</span>
             <h3 className="mt-1 text-[22px] leading-tight font-black tracking-display sm:text-[26px]">
@@ -161,17 +161,23 @@ function StatusCell({
   title,
   progress,
   active,
+  lockedBy = 0,
 }: {
   n: string;
   href: string;
   title: string;
   progress: { total: number; completed: number; pct: number; pendingGroups: string[]; doneGroups: string[] };
   active: boolean;
+  /** Etapas da montagem que ainda faltam (a desmontagem fica bloqueada até zerar). */
+  lockedBy?: number;
 }) {
   const done = progress.pct === 100;
+  const locked = active && lockedBy > 0;
   const state = !active ? null : done ? "concluída" : progress.completed > 0 ? "em curso" : null;
   const detail = !active
     ? "Disponível quando um culto for aberto."
+    : locked
+      ? `Liberada quando a montagem for concluída (${lockedBy === 1 ? "falta 1 etapa" : `faltam ${lockedBy} etapas`}).`
     : done
       ? "Todas as etapas concluídas."
       : progress.completed === 0
@@ -181,7 +187,7 @@ function StatusCell({
     <Link href={href} className="flex flex-col gap-2.5 border-b border-line p-6 transition-colors hover:bg-bg-alt/60 sm:p-7 sm:odd:border-r xl:border-r xl:border-b-0">
       <span className="font-mono text-xs text-ink-35">{n}</span>
       <h3 className="mt-1 text-[22px] leading-tight font-black tracking-display sm:text-[26px]">
-        {title} {state && (done ? <span>{state}</span> : <Hl>{state}</Hl>)}
+        {title} {locked ? <Lock className="mb-1 inline size-5 text-ink-35" aria-label="Bloqueada" /> : state && (done ? <span>{state}</span> : <Hl>{state}</Hl>)}
       </h3>
       <p className="text-sm leading-relaxed text-muted-foreground">{detail}</p>
       <div className="mt-auto pt-3">
