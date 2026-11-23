@@ -96,9 +96,24 @@ export default config;
    Muitos sites modernos já usam exatamente os nomes do shadcn (`--primary`, `--muted`, `--radius`) e essa escala de bordas — confira no CSS do site de referência e reaproveite.
 3. Para mudar a identidade, edita-se **só** `design/tokens.css`.
 
-## Fonte
+## Fonte: Inter (padrão aprovado pelo usuário)
 
-Use `next/font` (`next/font/google` ou local) com `variable: "--font-…"` e ligue em `--font-sans` no `@theme`. Assim o carregamento é igual ao de sites Next.js de referência.
+Todos os sistemas usam **Inter**, carregada pelo `next/font` (sem arquivo externo nem atraso de carregamento):
+
+```tsx
+// src/app/layout.tsx
+import { Inter } from "next/font/google";
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+// <html lang="pt-BR" className={inter.variable}> … <body className="font-sans">
+```
+```css
+/* globals.css */
+@theme inline { --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif; }
+```
+
+Pesos variáveis (100–900) já vêm inclusos: títulos fortes costumam ficar bem em 800–900 com `letter-spacing` levemente negativo; texto em 400–600. Para números e rótulos técnicos, a monoespaçada do sistema (`ui-monospace, SFMono-Regular, Menlo, …`) combina bem.
+
+Use outra fonte **só** se o usuário pedir, ou se o site de referência do projeto tiver fonte própria **e** o usuário confirmar a troca.
 
 ## Banco (Drizzle + postgres-js)
 

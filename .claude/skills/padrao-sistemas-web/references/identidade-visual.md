@@ -1,6 +1,6 @@
 # Identidade visual: método (sem valores fixos)
 
-Cada sistema tem a sua cara. **Não reutilize cores, fontes, logos ou vídeos de projetos anteriores.** O que se repete é o método abaixo.
+Cada sistema tem a sua cara. **Não reutilize cores, logos ou vídeos de projetos anteriores.** O que se repete é o método abaixo — e a fonte **Inter**, padrão aprovado pelo usuário para todos os sistemas.
 
 ## 1. Extrair do site de referência (não "achar" pela aparência)
 
@@ -8,7 +8,7 @@ Cada sistema tem a sua cara. **Não reutilize cores, fontes, logos ou vídeos de
 2. Baixe os CSS e procure:
    - variáveis próprias (`grep -oE -- '--[a-z0-9-]+:[^;}]+'`), em especial as do padrão shadcn (`--primary`, `--muted`, `--radius`) e as da marca;
    - em qual seletor estão (`:root`, `.dark`, alto contraste);
-   - `@font-face` e a classe da fonte (`next/font` gera `__className_…`).
+   - `@font-face` e a classe da fonte (`next/font` gera `__className_…`). A fonte padrão é **Inter**; se o site usar outra, mostre na validação e pergunte se troca.
 3. Abra o site no navegador (Playwright) e **meça** estilos computados: botões (cor, raio, padding, peso, maiúsculas, espaçamento), títulos (tamanho, peso, `letter-spacing`), rótulos, campos, cartões; contagem de raios usados (`border-radius`) para descobrir a escala.
 4. Logos: baixe os **arquivos originais** (SVG/PNG), verifique que não têm script (`grep -i '<script\|on[a-z]*='`), renderize para ver as versões (clara/escura) e use sem alterar, sempre com largura proporcional.
 5. Cores em `oklch` → HEX com `scripts/oklch_to_hex.py` (cálculo exato, sem estimar).

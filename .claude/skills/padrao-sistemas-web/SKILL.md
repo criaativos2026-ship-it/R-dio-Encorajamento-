@@ -5,7 +5,7 @@ description: Padrão do usuário para criar sistemas e aplicativos web (painéis
 
 # Padrão de sistemas web
 
-Este é o jeito de trabalhar que o usuário aprovou num projeto real (um app de equipe de serviço de uma igreja) e quer repetir em **todos os próximos sistemas**. Cada sistema terá **identidade visual própria**: nada de cores, fontes ou logos de projetos anteriores. O que se repete é a **stack**, o **processo**, a **segurança**, a **LGPD** e a **qualidade**.
+Este é o jeito de trabalhar que o usuário aprovou num projeto real (um app de equipe de serviço de uma igreja) e quer repetir em **todos os próximos sistemas**. Cada sistema terá **identidade visual própria**: nada de cores ou logos de projetos anteriores. A exceção aprovada pelo usuário é a **fonte Inter**, padrão de todos os sistemas. O que se repete é a **stack**, o **processo**, a **segurança**, a **LGPD** e a **qualidade**.
 
 ## Como falar com o usuário
 
@@ -21,6 +21,7 @@ Este é o jeito de trabalhar que o usuário aprovou num projeto real (um app de 
 | Framework | **Next.js (App Router, versão estável mais recente) + React + TypeScript** |
 | Componentes | **shadcn/ui** (Radix) — estilo new-york, variantes da marca dentro dos próprios componentes |
 | Estilo | **Tailwind CSS v4** ligado a **design tokens** num arquivo único (`design/tokens.css`) |
+| Fonte | **Inter** (via `next/font/google`), padrão em todos os sistemas |
 | Ícones | **lucide-react** |
 | Banco | **PostgreSQL + Drizzle ORM** (migrações versionadas) |
 | Login | **Auth.js** (credenciais, bcrypt, sessão JWT conferida no banco a cada requisição) |
