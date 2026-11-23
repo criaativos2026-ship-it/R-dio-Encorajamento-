@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Info, Pencil } from "lucide-react";
 import { ChecklistView } from "@/components/checklist/checklist-view";
 import { ResetChecklistButton } from "@/components/checklist/reset-button";
-import { ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/heading";
 import { CHECKLIST_AVISO, CHECKLIST_LABEL } from "@/lib/constants";
 import { serviceDate } from "@/lib/format";
@@ -40,9 +40,11 @@ export default async function ChecklistPage({ params }: { params: Promise<{ tipo
           coord ? (
             <>
               {service && checklist.completed > 0 && <ResetChecklistButton kind={kind} label={label} />}
-              <ButtonLink href="/equipe#checklists" variant="outline" size="sm">
-                <Pencil className="size-3.5" /> Editar itens
-              </ButtonLink>
+              <Button asChild variant="outline" size="sm">
+<Link href="/equipe#checklists">
+        <Pencil className="size-3.5" /> Editar itens
+       </Link>
+</Button>
             </>
           ) : undefined
         }

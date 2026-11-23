@@ -1,7 +1,7 @@
 import { Check, CheckCheck, Megaphone, Radio, Settings2, TriangleAlert, Undo2, UserPlus } from "lucide-react";
 import type { ActivityType } from "@/db/schema";
-import { Empty, Row } from "@/components/ui/panel";
-import { cn } from "@/lib/cn";
+import { Empty, ListRow as Row } from "@/components/list";
+import { cn } from "@/lib/utils";
 import { when } from "@/lib/format";
 
 const ICONS: Record<ActivityType, { icon: typeof Check; tone: "done" | "solid" | "brand" | "neutral" }> = {

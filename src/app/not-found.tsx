@@ -1,4 +1,5 @@
-import { ButtonLink } from "@/components/ui/button";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
@@ -6,9 +7,11 @@ export default function NotFound() {
       <div>
         <p className="font-mono text-sm text-ink-35">404</p>
         <h1 className="mt-3 text-4xl font-black tracking-display">Página não encontrada.</h1>
-        <ButtonLink href="/" className="mt-8">
-          Voltar ao painel
-        </ButtonLink>
+        <Button asChild className="mt-8">
+<Link href="/">
+     Voltar ao painel
+    </Link>
+</Button>
       </div>
     </main>
   );

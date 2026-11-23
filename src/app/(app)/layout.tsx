@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { TabBar, TopNav } from "@/components/shell/top-nav";
-import { ButtonLink } from "@/components/ui/button";
-import { initials } from "@/lib/format";
+import { Button } from "@/components/ui/button";
+import { UserMenu } from "@/components/shell/user-menu";
 import { countOpenProblems } from "@/lib/queries";
 import { isCoordenacao, requireUser } from "@/lib/session";
 
@@ -25,17 +25,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <div className="ml-auto flex items-center gap-6 xl:gap-8">
             <TopNav openProblems={openProblems} showTeam={isCoordenacao(user)} />
             <div className="hidden lg:block">
-              <ButtonLink href="/central#registrar" variant="outline-brand">
-                Registrar problema
-              </ButtonLink>
+              <Button asChild variant="brandOutline">
+<Link href="/central#registrar">
+        Registrar problema
+       </Link>
+</Button>
             </div>
-            <Link
-              href="/perfil"
-              title={`${user.name}: meu perfil`}
-              className="grid size-10 shrink-0 place-items-center rounded-full bg-ink text-[13px] font-bold text-white transition-opacity hover:opacity-85"
-            >
-              {initials(user.name)}
-            </Link>
+            <UserMenu name={user.name} email={user.email} role={isCoordenacao(user) ? "Coordenação" : "Voluntário(a)"} coord={isCoordenacao(user)} />
           </div>
         </div>
       </header>

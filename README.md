@@ -21,7 +21,9 @@ A identidade visual segue o site oficial ([missaoencorajamento.com.br](https://w
 Mesma base do site da igreja:
 
 - **Next.js 16** (App Router) + **React 19** + **TypeScript**
+- **shadcn/ui** (Radix UI) em `src/components/ui/`, com as mesmas variáveis (`--primary`, `--muted`, `--radius`…) e a mesma escala de bordas do site
 - **Tailwind CSS v4** ligado aos design tokens oficiais (`design/tokens.css`)
+- Avisos rápidos com **Sonner** e confirmações com o **Alert Dialog** do shadcn
 - Ícones **Lucide** e fonte **Inter** (`next/font`)
 - **PostgreSQL** + **Drizzle ORM** (migrações versionadas em `drizzle/`)
 - **Auth.js** (login com credenciais, senhas com bcrypt, limite de tentativas)
@@ -65,7 +67,9 @@ scripts/                 migrate.ts, seed.ts
 src/app/(auth)/          Entrar, primeiro acesso
 src/app/(app)/           Painel, checklist/[tipo], central, historico, equipe, perfil
 src/app/actions/         Ações do servidor (validação + permissão + histórico)
-src/components/ui/       Componentes reutilizáveis (botão, painel, campos, tags, progresso…)
+src/components/ui/       Componentes shadcn/ui (button, input, card, badge, checkbox, progress,
+                         alert-dialog, dropdown-menu, collapsible, avatar, sonner…)
+src/components/          Componentes do app montados com o shadcn (panel, form, confirm-button…)
 src/db/schema.ts         Estrutura do banco
 src/lib/                 Sessão, consultas, datas (fuso de São Paulo), constantes
 public/                  Logos oficiais (sem alteração)
@@ -76,3 +80,17 @@ public/                  Logos oficiais (sem alteração)
 - **Laranja #FF5C35**: ação e atenção (botões, em andamento, problemas abertos).
 - **Preto-grafite #1D1D1B**: concluído e resolvido. Não há cores fora da paleta do site.
 - Para mudar qualquer cor, fonte ou borda, edite só `design/tokens.css`.
+
+## Componentes shadcn/ui
+
+Os componentes seguem o estilo *new-york* do shadcn (`components.json`) e foram escritos no projeto
+porque o instalador oficial não tinha acesso a `ui.shadcn.com` no ambiente de desenvolvimento.
+Com acesso liberado, compare com a versão oficial e adicione novos componentes assim:
+
+```bash
+npx shadcn@latest diff          # mostra diferenças em relação ao registro oficial
+npx shadcn@latest add <nome>    # adiciona um componente novo
+```
+
+As variantes da marca (`brandOutline`, `ink`, `outlineLight` no botão; `brand` na badge) ficam no
+próprio componente, como o shadcn recomenda.

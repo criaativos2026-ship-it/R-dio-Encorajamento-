@@ -2,7 +2,7 @@ import { asc, desc } from "drizzle-orm";
 import { ChecklistEditor } from "@/components/equipe/checklist-editor";
 import { CreateUserForm, MemberRow } from "@/components/equipe/team";
 import { PageHeader } from "@/components/ui/heading";
-import { Panel, PanelHeader } from "@/components/ui/panel";
+import { Panel, PanelHeader } from "@/components/panel";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { getChecklist } from "@/lib/queries";

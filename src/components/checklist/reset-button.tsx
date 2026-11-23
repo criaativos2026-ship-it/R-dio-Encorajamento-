@@ -2,19 +2,18 @@
 
 import { RotateCcw } from "lucide-react";
 import { resetChecklist } from "@/app/actions/checklist";
-import { Button } from "@/components/ui/button";
+import { ConfirmButton } from "@/components/confirm-button";
 
 export function ResetChecklistButton({ kind, label }: { kind: "montagem" | "desmontagem"; label: string }) {
   return (
-    <form
-      action={resetChecklist.bind(null, kind)}
-      onSubmit={(e) => {
-        if (!confirm(`Desmarcar todos os itens do checklist de ${label.toLowerCase()} neste culto?`)) e.preventDefault();
-      }}
+    <ConfirmButton
+      title={`Reiniciar a ${label.toLowerCase()}?`}
+      description="Todos os itens marcados neste culto serão desmarcados. O registro continua no histórico."
+      confirmLabel="Reiniciar"
+      successMessage="Checklist reiniciado."
+      onConfirm={() => resetChecklist(kind)}
     >
-      <Button type="submit" variant="outline" size="sm">
-        <RotateCcw className="size-3.5" /> Reiniciar
-      </Button>
-    </form>
+      <RotateCcw className="size-3.5" /> Reiniciar
+    </ConfirmButton>
   );
 }

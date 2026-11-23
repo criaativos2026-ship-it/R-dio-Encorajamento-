@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ActivityList, type ActivityItem } from "@/components/activity-list";
 import { PageHeader } from "@/components/ui/heading";
-import { Empty, Panel } from "@/components/ui/panel";
+import { Empty } from "@/components/list";
+import { Panel } from "@/components/panel";
 import { dayHeading } from "@/lib/format";
 import { getActivities } from "@/lib/queries";
 import { requireUser } from "@/lib/session";

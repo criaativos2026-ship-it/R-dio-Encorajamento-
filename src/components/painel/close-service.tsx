@@ -1,20 +1,20 @@
 "use client";
 
 import { closeService } from "@/app/actions/service";
-import { Button } from "@/components/ui/button";
+import { ConfirmButton } from "@/components/confirm-button";
 
 export function CloseServiceButton({ pending }: { pending: number }) {
   return (
-    <form
-      action={closeService}
-      onSubmit={(e) => {
-        const msg = pending > 0 ? `Ainda há ${pending} etapa(s) pendente(s). Encerrar o culto mesmo assim?` : "Encerrar este culto?";
-        if (!confirm(msg)) e.preventDefault();
-      }}
+    <ConfirmButton
+      variant="outlineLight"
+      size="lg"
+      title="Encerrar o culto?"
+      description={pending > 0 ? `Ainda há ${pending} etapa(s) pendente(s) nos checklists. O culto será encerrado mesmo assim.` : "Os checklists deste culto ficam salvos no histórico."}
+      confirmLabel="Encerrar culto"
+      successMessage="Culto encerrado."
+      onConfirm={closeService}
     >
-      <Button type="submit" variant="outline-light">
-        Encerrar culto
-      </Button>
-    </form>
+      Encerrar culto
+    </ConfirmButton>
   );
 }

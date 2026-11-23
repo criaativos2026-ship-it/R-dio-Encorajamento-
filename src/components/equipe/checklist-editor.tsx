@@ -2,9 +2,12 @@
 
 import { useActionState, useEffect, useRef, useTransition } from "react";
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { addChecklistItem, moveChecklistItem, removeChecklistItem } from "@/app/actions/checklist";
+import { ConfirmButton } from "@/components/confirm-button";
+import { Field, FormError } from "@/components/form";
 import { Button } from "@/components/ui/button";
-import { Field, FormMessage, Input } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 type Group = { name: string; items: { id: string; label: string }[] };
@@ -17,6 +20,7 @@ export function ChecklistEditor({ kind, groups }: { kind: "montagem" | "desmonta
     // Após adicionar, limpa o campo e mantém o foco para cadastrar o próximo item.
     const input = ref.current?.elements.namedItem("label") as HTMLInputElement | null;
     if (state?.ok && input) {
+      toast.success(state.ok);
       input.value = "";
       input.focus();
     }
@@ -28,30 +32,31 @@ export function ChecklistEditor({ kind, groups }: { kind: "montagem" | "desmonta
         <div key={g.name} className="border-t border-line first:border-t-0">
           <p className="px-5 pt-4 pb-1 text-[11px] font-bold tracking-eyebrow text-ink-50 uppercase sm:px-6">{g.name}</p>
           {g.items.map((item, i) => (
-            <div key={item.id} className="flex items-center gap-2 px-5 py-2 sm:px-6">
-              <p className="flex-1 text-sm">{item.label}</p>
-              <Button size="sm" variant="ghost" disabled={pending || i === 0} aria-label="Subir" onClick={() => start(() => moveChecklistItem(item.id, "up"))}>
-                <ArrowUp className="size-4" />
+            <div key={item.id} className="flex items-center gap-1 px-5 py-1.5 sm:px-6">
+              <p className="flex-1 pr-2 text-sm">{item.label}</p>
+              <Button size="icon" variant="ghost" disabled={pending || i === 0} aria-label="Subir" onClick={() => start(() => moveChecklistItem(item.id, "up"))}>
+                <ArrowUp />
               </Button>
-              <Button size="sm" variant="ghost" disabled={pending || i === g.items.length - 1} aria-label="Descer" onClick={() => start(() => moveChecklistItem(item.id, "down"))}>
-                <ArrowDown className="size-4" />
+              <Button size="icon" variant="ghost" disabled={pending || i === g.items.length - 1} aria-label="Descer" onClick={() => start(() => moveChecklistItem(item.id, "down"))}>
+                <ArrowDown />
               </Button>
-              <Button
-                size="sm"
+              <ConfirmButton
+                size="icon"
                 variant="ghost"
-                disabled={pending}
                 aria-label="Remover"
-                onClick={() => {
-                  if (confirm(`Remover "${item.label}"?`)) start(() => removeChecklistItem(item.id));
-                }}
+                title="Remover este item?"
+                description={`"${item.label}" sai do checklist de todos os próximos cultos.`}
+                confirmLabel="Remover"
+                successMessage="Item removido."
+                onConfirm={() => removeChecklistItem(item.id)}
               >
-                <Trash2 className="size-4" />
-              </Button>
+                <Trash2 />
+              </ConfirmButton>
             </div>
           ))}
         </div>
       ))}
-      <form ref={ref} action={action} className="grid gap-3 border-t border-line bg-bg-alt/50 p-5 sm:grid-cols-[180px_1fr_auto] sm:items-end sm:p-6">
+      <form ref={ref} action={action} className="grid gap-3 border-t border-line bg-muted/50 p-5 sm:grid-cols-[180px_1fr_auto] sm:items-end sm:p-6">
         <input type="hidden" name="kind" value={kind} />
         <Field label="Grupo" htmlFor={`${kind}-group`}>
           <Input id={`${kind}-group`} name="group" list={`${kind}-groups`} required defaultValue={groups.at(-1)?.name} className="h-11 text-sm" />
@@ -68,7 +73,7 @@ export function ChecklistEditor({ kind, groups }: { kind: "montagem" | "desmonta
           Adicionar
         </SubmitButton>
         <div className="sm:col-span-3">
-          <FormMessage state={state?.error ? state : undefined} />
+          <FormError state={state} />
         </div>
       </form>
     </div>

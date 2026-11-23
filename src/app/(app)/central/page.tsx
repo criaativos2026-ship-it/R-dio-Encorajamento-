@@ -2,9 +2,10 @@ import Link from "next/link";
 import { Megaphone, Pin } from "lucide-react";
 import { NoticeActions, NoticeForm, ProblemForm, ResolveForm } from "@/components/central/forms";
 import { PageHeader } from "@/components/ui/heading";
-import { Empty, Panel, PanelHeader, Row } from "@/components/ui/panel";
-import { Tag } from "@/components/ui/tag";
-import { cn } from "@/lib/cn";
+import { Empty, ListRow as Row } from "@/components/list";
+import { Panel, PanelHeader } from "@/components/panel";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { SEVERIDADE } from "@/lib/constants";
 import { when } from "@/lib/format";
 import { getNotices, getProblems } from "@/lib/queries";
@@ -48,7 +49,7 @@ async function Problemas() {
     <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
       <div className="grid gap-6 self-start">
         <Panel>
-          <PanelHeader title="Abertos" action={<Tag tone={open.length ? "brand" : "done"}>{open.length}</Tag>} />
+          <PanelHeader title="Abertos" action={<Badge variant={open.length ? "brand" : "secondary"}>{open.length}</Badge>} />
           {open.length === 0 ? (
             <Empty>Nenhum problema aberto.</Empty>
           ) : (
@@ -57,9 +58,10 @@ async function Problemas() {
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="text-[15px] font-semibold">{p.title}</p>
-                    <Tag tone={p.severity === "alta" ? "solid" : p.severity === "media" ? "brand" : "neutral"} dot>
+                    <Badge variant={p.severity === "alta" ? "default" : p.severity === "media" ? "brand" : "outline"}>
+                      <span className="size-1.5 rounded-full bg-current" />
                       {SEVERIDADE[p.severity]}
-                    </Tag>
+                    </Badge>
                   </div>
                   {p.description && <p className="mt-1.5 text-sm leading-relaxed whitespace-pre-line text-muted-foreground">{p.description}</p>}
                   <p className="mt-1.5 text-[13px] text-ink-50">
@@ -79,9 +81,10 @@ async function Problemas() {
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="text-[15px] font-semibold text-ink-50">{p.title}</p>
-                    <Tag tone="done" dot>
+                    <Badge variant="secondary">
+                      <span className="size-1.5 rounded-full bg-current" />
                       Resolvido
-                    </Tag>
+                    </Badge>
                   </div>
                   {p.resolutionNote && <p className="mt-1.5 text-sm text-muted-foreground">{p.resolutionNote}</p>}
                   <p className="mt-1.5 text-[13px] text-ink-50">
@@ -93,8 +96,7 @@ async function Problemas() {
           </Panel>
         )}
       </div>
-      <Panel className="scroll-mt-28 self-start">
-        <div id="registrar" className="scroll-mt-28" />
+      <Panel id="registrar" className="scroll-mt-28 self-start">
         <PanelHeader title="Registrar problema" />
         <ProblemForm />
       </Panel>

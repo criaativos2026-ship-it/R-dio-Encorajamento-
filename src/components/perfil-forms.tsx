@@ -2,25 +2,28 @@
 
 import { useActionState } from "react";
 import { changeOwnPassword, updateOwnProfile } from "@/app/actions/team";
-import { Field, FormMessage, Input, Select } from "@/components/ui/field";
+import { Field, FormError, useFormFeedback } from "@/components/form";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { FUNCOES } from "@/lib/constants";
 
 export function ProfileForm({ name, defaultFunction }: { name: string; defaultFunction: string }) {
   const [state, action] = useActionState(updateOwnProfile, undefined);
+  const ref = useFormFeedback(state, { reset: false });
   return (
-    <form action={action} className="grid gap-4 p-5 sm:p-6">
+    <form ref={ref} action={action} className="grid gap-4 p-5 sm:p-6">
       <Field label="Nome" htmlFor="pf-name">
         <Input id="pf-name" name="name" defaultValue={name} required maxLength={80} />
       </Field>
       <Field label="Função principal" htmlFor="pf-fn">
-        <Select id="pf-fn" name="defaultFunction" defaultValue={defaultFunction}>
+        <NativeSelect id="pf-fn" name="defaultFunction" defaultValue={defaultFunction}>
           {FUNCOES.map((f) => (
             <option key={f}>{f}</option>
           ))}
-        </Select>
+        </NativeSelect>
       </Field>
-      <FormMessage state={state} />
+      <FormError state={state} />
       <SubmitButton>Salvar</SubmitButton>
     </form>
   );
@@ -28,8 +31,9 @@ export function ProfileForm({ name, defaultFunction }: { name: string; defaultFu
 
 export function PasswordForm() {
   const [state, action] = useActionState(changeOwnPassword, undefined);
+  const ref = useFormFeedback(state);
   return (
-    <form action={action} className="grid gap-4 p-5 sm:p-6">
+    <form ref={ref} action={action} className="grid gap-4 p-5 sm:p-6">
       <Field label="Senha atual" htmlFor="pw-cur">
         <Input id="pw-cur" name="current" type="password" autoComplete="current-password" required />
       </Field>
@@ -39,7 +43,7 @@ export function PasswordForm() {
       <Field label="Confirmar nova senha" htmlFor="pw-conf">
         <Input id="pw-conf" name="confirm" type="password" autoComplete="new-password" required minLength={8} />
       </Field>
-      <FormMessage state={state} />
+      <FormError state={state} />
       <SubmitButton variant="ink">Alterar senha</SubmitButton>
     </form>
   );

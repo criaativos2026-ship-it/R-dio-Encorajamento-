@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { cn } from "@/lib/cn";
+import { cn } from "@/lib/utils";
 
 /** Rótulo com traço laranja, como no topo do site ("—— SÃO CARLOS — SP"). */
 export function Eyebrow({ children, light, className }: { children: ReactNode; light?: boolean; className?: string }) {

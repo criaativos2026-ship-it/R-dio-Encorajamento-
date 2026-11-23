@@ -1,11 +1,21 @@
-import { cn } from "@/lib/cn";
+"use client";
 
-/** Laranja enquanto em andamento; preto-grafite quando concluído (padrão aprovado). */
-export function Progress({ pct, className, label }: { pct: number; className?: string; label?: string }) {
-  const done = pct >= 100;
+import * as React from "react";
+import { Progress as ProgressPrimitive } from "radix-ui";
+import { cn } from "@/lib/utils";
+
+/** Laranja enquanto em andamento; preto-grafite quando chega a 100% (padrão aprovado). */
+function Progress({ className, value, ...props }: React.ComponentProps<typeof ProgressPrimitive.Root>) {
+  const done = (value ?? 0) >= 100;
   return (
-    <div role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-label={label} className={cn("h-1.5 overflow-hidden rounded-full bg-bg-alt", className)}>
-      <div className={cn("h-full rounded-full transition-[width] duration-500", done ? "bg-ink" : "bg-brand")} style={{ width: `${pct}%` }} />
-    </div>
+    <ProgressPrimitive.Root data-slot="progress" value={value} className={cn("relative h-1.5 w-full overflow-hidden rounded-full bg-muted", className)} {...props}>
+      <ProgressPrimitive.Indicator
+        data-slot="progress-indicator"
+        className={cn("h-full w-full flex-1 rounded-full transition-transform duration-500", done ? "bg-ink" : "bg-primary")}
+        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+      />
+    </ProgressPrimitive.Root>
   );
 }
+
+export { Progress };

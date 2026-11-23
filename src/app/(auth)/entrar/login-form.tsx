@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 import { login } from "@/app/actions/auth";
-import { Field, FormMessage, Input } from "@/components/ui/field";
+import { Field, FormError } from "@/components/form";
+import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 export function LoginForm() {
@@ -13,9 +14,9 @@ export function LoginForm() {
         <Input id="email" name="email" type="email" autoComplete="email" required autoFocus={!state?.email} defaultValue={state?.email} key={state?.email} />
       </Field>
       <Field label="Senha" htmlFor="password">
-        <Input id="password" name="password" type="password" autoComplete="current-password" required autoFocus={!!state?.email} />
+        <Input id="password" name="password" type="password" autoComplete="current-password" required autoFocus={!!state?.email} aria-invalid={!!state?.error} />
       </Field>
-      <FormMessage state={state} />
+      <FormError state={state} />
       <SubmitButton size="lg" pendingText="Entrando…" className="w-full">
         Entrar
       </SubmitButton>

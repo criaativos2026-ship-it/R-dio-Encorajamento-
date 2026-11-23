@@ -4,11 +4,12 @@ import { ActivityList } from "@/components/activity-list";
 import { CloseServiceButton } from "@/components/painel/close-service";
 import { OpenServiceForm } from "@/components/painel/open-service-form";
 import { JoinRoster, LeaveRoster } from "@/components/painel/roster";
-import { ButtonLink, buttonClass } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Eyebrow, Hl } from "@/components/ui/heading";
-import { Panel, PanelHeader, Row } from "@/components/ui/panel";
+import { ListRow as Row } from "@/components/list";
+import { Panel, PanelHeader } from "@/components/panel";
 import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/cn";
+import { cn } from "@/lib/utils";
 import { FUNCOES, SEVERIDADE } from "@/lib/constants";
 import { firstName, greeting, initials, serviceDate, todayISO, when } from "@/lib/format";
 import { getActiveService, getActivities, getNotices, getProblems, getProgress, getRoster } from "@/lib/queries";
@@ -66,11 +67,13 @@ export default async function Painel() {
           {service ? (
             <div className="flex flex-wrap gap-3">
               {next && (
-                <ButtonLink href={next.href} size="lg">
-                  {next.label} <ArrowRight className="size-4" />
-                </ButtonLink>
+                <Button asChild size="lg">
+<Link href={next.href}>
+         {next.label} <ArrowRight className="size-4" />
+        </Link>
+</Button>
               )}
-              <a href={RADIO_URL} target="_blank" rel="noopener noreferrer" className={buttonClass("outline-light", "lg")}>
+              <a href={RADIO_URL} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "outlineLight", size: "lg" })}>
                 <Radio className="size-4" /> Ouvir a rádio
               </a>
               {isCoordenacao(user) && <CloseServiceButton pending={pending} />}
@@ -188,7 +191,7 @@ function StatusCell({
           </span>
           <span className="font-mono text-ink-50">{progress.pct}%</span>
         </div>
-        <Progress pct={progress.pct} label={`Progresso da ${title.toLowerCase()}`} />
+        <Progress value={progress.pct} aria-label={`Progresso da ${title.toLowerCase()}`} />
       </div>
     </Link>
   );

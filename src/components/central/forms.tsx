@@ -1,23 +1,22 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
-import { Pin, PinOff, Trash2 } from "lucide-react";
+import { useActionState, useState } from "react";
+import { ChevronDown, Pin, PinOff, Trash2 } from "lucide-react";
 import { createNotice, createProblem, deleteNotice, resolveProblem, togglePinNotice } from "@/app/actions/central";
+import { ConfirmButton } from "@/components/confirm-button";
+import { Field, FormError, useFormFeedback } from "@/components/form";
 import { Button } from "@/components/ui/button";
-import { Field, FormMessage, Input, Select, Textarea } from "@/components/ui/field";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { NativeSelect } from "@/components/ui/native-select";
 import { SubmitButton } from "@/components/ui/submit-button";
-
-function useResetOnSuccess(state: { ok?: string } | undefined) {
-  const ref = useRef<HTMLFormElement>(null);
-  useEffect(() => {
-    if (state?.ok) ref.current?.reset();
-  }, [state]);
-  return ref;
-}
+import { Textarea } from "@/components/ui/textarea";
 
 export function ProblemForm() {
   const [state, action] = useActionState(createProblem, undefined);
-  const ref = useResetOnSuccess(state);
+  const ref = useFormFeedback(state);
   return (
     <form ref={ref} action={action} className="grid gap-4 p-5 sm:p-6">
       <Field label="O que aconteceu?" htmlFor="p-title">
@@ -27,40 +26,46 @@ export function ProblemForm() {
         <Textarea id="p-desc" name="description" maxLength={1000} placeholder="Onde, quando, o que já foi tentado" />
       </Field>
       <Field label="Prioridade" htmlFor="p-sev">
-        <Select id="p-sev" name="severity" defaultValue="media">
+        <NativeSelect id="p-sev" name="severity" defaultValue="media">
           <option value="baixa">Baixa</option>
           <option value="media">Média</option>
           <option value="alta">Alta: impede a transmissão</option>
-        </Select>
+        </NativeSelect>
       </Field>
-      <FormMessage state={state} />
+      <FormError state={state} />
       <SubmitButton pendingText="Registrando…">Registrar problema</SubmitButton>
     </form>
   );
 }
 
 export function ResolveForm({ id }: { id: string }) {
+  const [open, setOpen] = useState(false);
   const [state, action] = useActionState(resolveProblem, undefined);
+  useFormFeedback(state);
   return (
-    <details className="group mt-3">
-      <summary className="inline-flex h-9 cursor-pointer list-none items-center rounded-2xl border border-line-15 px-3.5 text-[13px] font-bold transition-colors hover:border-ink-35 [&::-webkit-details-marker]:hidden">
-        Marcar como resolvido
-      </summary>
-      <form action={action} className="mt-3 grid gap-3">
-        <input type="hidden" name="id" value={id} />
-        <Textarea name="note" maxLength={500} placeholder="Como foi resolvido? (opcional)" className="min-h-20 text-sm" aria-label="Como foi resolvido" />
-        <FormMessage state={state} />
-        <SubmitButton variant="ink" size="sm" pendingText="Salvando…" className="justify-self-start">
-          Confirmar resolução
-        </SubmitButton>
-      </form>
-    </details>
+    <Collapsible open={open} onOpenChange={setOpen} className="mt-3">
+      <CollapsibleTrigger asChild>
+        <Button variant="outline" size="sm">
+          Marcar como resolvido <ChevronDown className={open ? "rotate-180 transition-transform" : "transition-transform"} />
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <form action={action} className="mt-3 grid gap-3">
+          <input type="hidden" name="id" value={id} />
+          <Textarea name="note" maxLength={500} placeholder="Como foi resolvido? (opcional)" className="min-h-20 text-sm" aria-label="Como foi resolvido" />
+          <FormError state={state} />
+          <SubmitButton variant="ink" size="sm" pendingText="Salvando…" className="justify-self-start">
+            Confirmar resolução
+          </SubmitButton>
+        </form>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }
 
 export function NoticeForm() {
   const [state, action] = useActionState(createNotice, undefined);
-  const ref = useResetOnSuccess(state);
+  const ref = useFormFeedback(state);
   return (
     <form ref={ref} action={action} className="grid gap-4 p-5 sm:p-6">
       <Field label="Título" htmlFor="n-title">
@@ -69,10 +74,13 @@ export function NoticeForm() {
       <Field label="Mensagem" htmlFor="n-body">
         <Textarea id="n-body" name="body" required maxLength={2000} />
       </Field>
-      <label className="flex items-center gap-3 text-sm font-medium">
-        <input type="checkbox" name="pinned" className="size-4 accent-[#1D1D1B]" /> Fixar no topo
-      </label>
-      <FormMessage state={state} />
+      <div className="flex items-center gap-3">
+        <Checkbox id="n-pinned" name="pinned" value="on" />
+        <Label htmlFor="n-pinned" className="text-sm font-medium tracking-normal text-ink normal-case">
+          Fixar no topo
+        </Label>
+      </div>
+      <FormError state={state} />
       <SubmitButton pendingText="Publicando…">Publicar comunicado</SubmitButton>
     </form>
   );
@@ -82,20 +90,22 @@ export function NoticeActions({ id, pinned }: { id: string; pinned: boolean }) {
   return (
     <div className="flex shrink-0 gap-1">
       <form action={togglePinNotice.bind(null, id)}>
-        <Button type="submit" variant="ghost" size="sm" title={pinned ? "Desafixar" : "Fixar no topo"} aria-label={pinned ? "Desafixar" : "Fixar no topo"}>
-          {pinned ? <PinOff className="size-4" /> : <Pin className="size-4" />}
+        <Button type="submit" variant="ghost" size="icon" title={pinned ? "Desafixar" : "Fixar no topo"} aria-label={pinned ? "Desafixar" : "Fixar no topo"}>
+          {pinned ? <PinOff /> : <Pin />}
         </Button>
       </form>
-      <form
-        action={deleteNotice.bind(null, id)}
-        onSubmit={(e) => {
-          if (!confirm("Remover este comunicado?")) e.preventDefault();
-        }}
+      <ConfirmButton
+        variant="ghost"
+        size="icon"
+        aria-label="Remover"
+        title="Remover este comunicado?"
+        description="Ele sai do mural para toda a equipe."
+        confirmLabel="Remover"
+        successMessage="Comunicado removido."
+        onConfirm={() => deleteNotice(id)}
       >
-        <Button type="submit" variant="ghost" size="sm" title="Remover" aria-label="Remover">
-          <Trash2 className="size-4" />
-        </Button>
-      </form>
+        <Trash2 />
+      </ConfirmButton>
     </div>
   );
 }

@@ -1,9 +1,10 @@
+import Link from "next/link";
 import { LogOut, Users } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { PasswordForm, ProfileForm } from "@/components/perfil-forms";
-import { Button, ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/heading";
-import { Panel, PanelHeader } from "@/components/ui/panel";
+import { Panel, PanelHeader } from "@/components/panel";
 import { FUNCOES } from "@/lib/constants";
 import { isCoordenacao, requireUser } from "@/lib/session";
 
@@ -20,9 +21,11 @@ export default async function Perfil() {
         actions={
           <>
             {isCoordenacao(user) && (
-              <ButtonLink href="/equipe" variant="outline" className="lg:hidden">
-                <Users className="size-4" /> Equipe
-              </ButtonLink>
+              <Button asChild variant="outline" className="lg:hidden">
+<Link href="/equipe">
+        <Users className="size-4" /> Equipe
+       </Link>
+</Button>
             )}
             <form action={logout}>
               <Button type="submit" variant="outline">

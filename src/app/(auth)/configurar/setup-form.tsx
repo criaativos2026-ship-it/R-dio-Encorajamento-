@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 import { setupFirstUser } from "@/app/actions/auth";
-import { Field, FormMessage, Input } from "@/components/ui/field";
+import { Field, FormError } from "@/components/form";
+import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 export function SetupForm() {
@@ -18,7 +19,7 @@ export function SetupForm() {
       <Field label="Senha" htmlFor="password" hint="Mínimo de 8 caracteres.">
         <Input id="password" name="password" type="password" autoComplete="new-password" required minLength={8} />
       </Field>
-      <FormMessage state={state} />
+      <FormError state={state} />
       <SubmitButton size="lg" pendingText="Criando…" className="w-full">
         Criar conta e entrar
       </SubmitButton>
