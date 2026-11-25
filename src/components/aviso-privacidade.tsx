@@ -42,7 +42,7 @@ export function AvisoPrivacidade() {
         <ul>
           <li><strong>Cadastro:</strong> nome, e-mail, função principal e perfil de acesso (Pastor(a), Líder, Coordenação ou Voluntário(a)).</li>
           <li><strong>Senha:</strong> guardada apenas de forma criptografada. Ninguém, nem a gestão, consegue vê-la.</li>
-          <li><strong>Registros do serviço:</strong> em quais cultos você esteve na escala e com qual função, quais itens dos checklists você marcou e a que horas, problemas que registrou ou resolveu e comunicados que publicou.</li>
+          <li><strong>Registros do serviço:</strong> convites de escala que você recebeu e a sua resposta (aceite ou recusa, com o motivo, se você escrever), em quais cultos você esteve na escala e com qual função, quais itens dos checklists você marcou e a que horas, problemas que registrou ou resolveu e comunicados que publicou.</li>
           <li><strong>Histórico de uso:</strong> as ações acima, com data e horário, e o momento em que você aceitou este aviso.</li>
         </ul>
         <p>O app <strong>não</strong> pede CPF, telefone, endereço, foto ou data de nascimento, e <strong>não</strong> usa a localização do seu celular.</p>
@@ -67,8 +67,8 @@ export function AvisoPrivacidade() {
 
       <Secao n="05" titulo="Quem pode ver">
         <ul>
-          <li><strong>Toda a equipe:</strong> nomes e funções na escala, quem marcou cada item, o histórico de atividades, os problemas e os comunicados.</li>
-          <li><strong>Só a gestão</strong> (Pastor(a), Líder e Coordenação): os e-mails, a lista de pessoas e os relatórios de cada culto.</li>
+          <li><strong>Toda a equipe:</strong> nomes e funções na escala do dia, quem marcou cada item, o histórico de atividades, os problemas e os comunicados.</li>
+          <li><strong>Só a gestão</strong> (Pastor(a), Líder e Coordenação): os e-mails, a lista de pessoas, as respostas às escalas (com o motivo da recusa) e os relatórios de cada culto.</li>
         </ul>
       </Secao>
 
@@ -81,7 +81,7 @@ export function AvisoPrivacidade() {
 
       <Secao n="07" titulo="Por quanto tempo">
         <ul>
-          <li>Os registros dos cultos, o histórico e os problemas resolvidos são <strong>apagados automaticamente depois de {RETENCAO_TEXTO}</strong>.</li>
+          <li>Os registros dos cultos, as escalas, o histórico e os problemas resolvidos são <strong>apagados automaticamente depois de {RETENCAO_TEXTO}</strong>.</li>
           <li>O seu cadastro fica enquanto você fizer parte da equipe. Se você sair, a gestão pode desativar o acesso ou excluir os seus dados.</li>
         </ul>
       </Secao>

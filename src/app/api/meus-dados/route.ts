@@ -1,6 +1,6 @@
 import { asc, eq, or } from "drizzle-orm";
 import { db } from "@/db";
-import { activities, assignments, checklistItems, checks, notices, problems, services, users } from "@/db/schema";
+import { activities, assignments, checklistItems, checks, notices, problems, schedules, scheduleSlots, services, users } from "@/db/schema";
 import { logActivity } from "@/lib/activity";
 import { PERFIL_LABEL } from "@/lib/constants";
 import { AVISO_VERSAO, CONTROLADOR } from "@/lib/privacidade";
@@ -13,7 +13,7 @@ import { requireUser } from "@/lib/session";
 export async function GET() {
   const me = await requireUser();
 
-  const [escala, marcacoes, problemas, comunicados, atividades] = await Promise.all([
+  const [escala, marcacoes, problemas, comunicados, atividades, convites] = await Promise.all([
     db
       .select({ culto: services.title, data: services.date, funcao: assignments.function, em: assignments.createdAt })
       .from(assignments)
@@ -34,6 +34,12 @@ export async function GET() {
       .orderBy(asc(problems.createdAt)),
     db.select({ titulo: notices.title, mensagem: notices.body, publicado_em: notices.createdAt }).from(notices).where(eq(notices.createdBy, me.id)).orderBy(asc(notices.createdAt)),
     db.select({ tipo: activities.type, descricao: activities.message, em: activities.createdAt }).from(activities).where(eq(activities.userId, me.id)).orderBy(asc(activities.createdAt)),
+    db
+      .select({ culto: schedules.title, data: schedules.date, funcao: scheduleSlots.function, resposta: scheduleSlots.status, motivo: scheduleSlots.responseNote, convidado_em: scheduleSlots.createdAt, respondido_em: scheduleSlots.respondedAt })
+      .from(scheduleSlots)
+      .innerJoin(schedules, eq(schedules.id, scheduleSlots.scheduleId))
+      .where(eq(scheduleSlots.userId, me.id))
+      .orderBy(asc(schedules.date)),
   ]);
 
   const [perfil] = await db
@@ -45,6 +51,7 @@ export async function GET() {
     sobre: `Dados pessoais guardados pelo app Controle Interação — Rádio Encorajamento (${CONTROLADOR}). Gerado em ${new Date().toISOString()}. Aviso de privacidade versão ${AVISO_VERSAO}.`,
     perfil: { ...perfil, perfil: PERFIL_LABEL[perfil.perfil] },
     escala_nos_cultos: escala,
+    convites_de_escala: convites,
     itens_marcados_nos_checklists: marcacoes,
     problemas: problemas.map(({ criadoPorMim, resolvidoPorMim, ...p }) => ({ ...p, registrado_por_mim: criadoPorMim === me.id, resolvido_por_mim: resolvidoPorMim === me.id })),
     comunicados_publicados: comunicados,

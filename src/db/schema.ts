@@ -18,6 +18,7 @@ export const userRole = pgEnum("user_role", ["voluntario", "coordenacao", "lider
 export const checklistKind = pgEnum("checklist_kind", ["montagem", "desmontagem"]);
 export const severity = pgEnum("severity", ["baixa", "media", "alta"]);
 export const problemStatus = pgEnum("problem_status", ["aberto", "resolvido"]);
+export const slotStatus = pgEnum("slot_status", ["pendente", "aceita", "recusada"]);
 export const activityType = pgEnum("activity_type", [
   "check",
   "uncheck",
@@ -149,6 +150,37 @@ export const activities = pgTable(
   (t) => [index("activities_created_idx").on(t.createdAt)],
 );
 
+/** Escala planejada pela gestão para um culto futuro (data + nome). */
+export const schedules = pgTable(
+  "schedules",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    date: date("date").notNull(),
+    title: varchar("title", { length: 80 }).notNull(),
+    notes: text("notes"),
+    createdBy: uuid("created_by").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("schedules_date_idx").on(t.date), uniqueIndex("schedules_date_title_idx").on(t.date, t.title)],
+);
+
+/** Convite de uma pessoa para uma escala, com a resposta dela (aceitar/recusar). */
+export const scheduleSlots = pgTable(
+  "schedule_slots",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    scheduleId: uuid("schedule_id").notNull().references(() => schedules.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    function: varchar("function", { length: 60 }).notNull(),
+    status: slotStatus("status").notNull().default("pendente"),
+    responseNote: varchar("response_note", { length: 300 }),
+    respondedAt: timestamp("responded_at", { withTimezone: true }),
+    invitedBy: uuid("invited_by").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("schedule_slots_unique_idx").on(t.scheduleId, t.userId), index("schedule_slots_user_idx").on(t.userId, t.status)],
+);
+
 export const usersRelations = relations(users, ({ many }) => ({ assignments: many(assignments) }));
 export const servicesRelations = relations(services, ({ many }) => ({
   assignments: many(assignments),
@@ -180,3 +212,4 @@ export type Service = typeof services.$inferSelect;
 export type ChecklistKind = (typeof checklistKind.enumValues)[number];
 export type Severity = (typeof severity.enumValues)[number];
 export type ActivityType = (typeof activityType.enumValues)[number];
+export type SlotStatus = (typeof slotStatus.enumValues)[number];

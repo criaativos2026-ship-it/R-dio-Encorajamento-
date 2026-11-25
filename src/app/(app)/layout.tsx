@@ -4,12 +4,13 @@ import { TabBar, TopNav } from "@/components/shell/top-nav";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/shell/user-menu";
 import { PERFIL_LABEL } from "@/lib/constants";
+import { countMyPending } from "@/lib/escalas";
 import { countOpenProblems } from "@/lib/queries";
 import { isGestao, requireUser } from "@/lib/session";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
-  const openProblems = await countOpenProblems();
+  const [openProblems, pendingInvites] = await Promise.all([countOpenProblems(), countMyPending(user.id)]);
 
   return (
     <div className="min-h-dvh">
@@ -24,7 +25,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             </span>
           </Link>
           <div className="ml-auto flex items-center gap-6 xl:gap-8">
-            <TopNav openProblems={openProblems} showTeam={isGestao(user)} />
+            <TopNav openProblems={openProblems} pendingInvites={pendingInvites} showTeam={isGestao(user)} />
             <div className="hidden lg:block">
               <Button asChild variant="brandOutline">
 <Link href="/central#registrar">
@@ -37,7 +38,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         </div>
       </header>
       <div className="pb-28 lg:pb-0">{children}</div>
-      <TabBar openProblems={openProblems} />
+      <TabBar openProblems={openProblems} pendingInvites={pendingInvites} />
     </div>
   );
 }

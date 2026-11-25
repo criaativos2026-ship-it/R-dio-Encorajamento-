@@ -36,6 +36,13 @@
       "when": 1795456518753,
       "tag": "0004_funcoes_da_igreja",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1795620345741,
+      "tag": "0005_escalas",
+      "breakpoints": true
     }
   ]
 }

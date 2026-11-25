@@ -58,3 +58,30 @@ export function initials(name: string) {
 export function firstName(name: string) {
   return name.trim().split(/\s+/)[0];
 }
+
+/** Dia da semana (0 = domingo) de uma data AAAA-MM-DD. */
+export function weekdayOf(iso: string) {
+  return new Date(`${iso}T12:00:00Z`).getUTCDay();
+}
+
+/** Soma dias a uma data AAAA-MM-DD. */
+export function addDaysISO(iso: string, days: number) {
+  const d = new Date(`${iso}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+/** Nome do dia da semana em minúsculas ("terça-feira"). */
+export function weekdayName(iso: string) {
+  return new Intl.DateTimeFormat("pt-BR", { weekday: "long", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`));
+}
+
+/** Próximas datas que caem nos dias informados (a partir de hoje, inclusive). */
+export function nextDatesOn(weekdays: readonly number[], count: number, from = todayISO()) {
+  const out: string[] = [];
+  for (let i = 0; out.length < count && i < 60; i++) {
+    const d = addDaysISO(from, i);
+    if (weekdays.includes(weekdayOf(d))) out.push(d);
+  }
+  return out;
+}

@@ -9,10 +9,12 @@ A identidade visual segue o site oficial ([missaoencorajamento.com.br](https://w
 | Tela | O que faz |
 |---|---|
 | **Entrar** | Login com e-mail e senha. Na primeira execução, `/configurar` cria a primeira conta da gestão. |
-| **Painel** | Culto em andamento, progresso da montagem e da desmontagem, problemas abertos, último comunicado, atividade recente e escala do dia. Qualquer voluntário pode abrir o culto do dia; a coordenação encerra. |
+| **Painel** | Culto em andamento, progresso da montagem e da desmontagem, problemas abertos, último comunicado, atividade recente, escala do dia, convites de escala pendentes e a próxima escala aceita. Voluntários abrem culto só aos **domingos e quintas**; a gestão abre em qualquer dia e encerra. |
+| **Escalas** | Cada pessoa vê os seus convites e **aceita ou recusa** (motivo opcional), podendo mudar até o dia do culto. Quem aceitou entra sozinho na escala do dia quando o culto é aberto. |
 | **Montagem / Desmontagem** | Checklists por grupo. Cada item marcado registra quem marcou e quando. O aviso "Importante" aparece no topo da desmontagem. |
 | **Central** | Registro de problemas com prioridade, resolução com observação e mural de comunicados (a coordenação publica e fixa). |
 | **Histórico** | Linha do tempo de tudo o que foi feito, agrupada por dia. |
+| **Gestão → Escalas** | A gestão cria a escala de cada culto (sugere os próximos domingos e quintas), convida pessoas com a função (Diretor de Transmissão / Operador da Rádio), acompanha aceites, recusas e motivos, retira pessoas e reconvida quem recusou. |
 | **Gestão** (pastor, líder, coordenação) | Visão geral e **relatório de cada culto** (escala, quem marcou cada item e quando, problemas, pendências, linha do tempo, impressão/PDF), cadastro de pessoas e perfis, e edição dos checklists. |
 | **Perfil** | Nome, função principal, troca de senha e saída. |
 

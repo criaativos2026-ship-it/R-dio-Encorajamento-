@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Lock, Radio } from "lucide-react";
+import { ArrowRight, CalendarCheck, CalendarClock, Lock, Radio } from "lucide-react";
 import { ActivityList } from "@/components/activity-list";
 import { HeroVideo } from "@/components/hero-video";
 import { CloseServiceButton } from "@/components/painel/close-service";
@@ -11,8 +11,9 @@ import { ListRow as Row } from "@/components/list";
 import { Panel, PanelHeader } from "@/components/panel";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { FUNCOES, SEVERIDADE } from "@/lib/constants";
-import { clockNow, firstName, greeting, initials, serviceDate, todayISO, when } from "@/lib/format";
+import { DIAS_DE_CULTO, DIAS_DE_CULTO_TEXTO, FUNCOES, SEVERIDADE, TITULO_POR_DIA } from "@/lib/constants";
+import { countMyPending, getMyNextAccepted, isCultoDay } from "@/lib/escalas";
+import { clockNow, firstName, greeting, initials, nextDatesOn, serviceDate, todayISO, weekdayName, weekdayOf, when } from "@/lib/format";
 import { getActiveService, getActivities, getNotices, getProblems, getProgress, getRoster } from "@/lib/queries";
 import { isGestao, requireUser } from "@/lib/session";
 
@@ -23,14 +24,21 @@ const RADIO_URL = "https://radioencorajamento.com.br/"; // mesmo link usado no s
 export default async function Painel() {
   const user = await requireUser();
   const service = await getActiveService();
-  const [montagem, desmontagem, openProblems, notices, activity, roster] = await Promise.all([
+  const gestao = isGestao(user);
+  const [montagem, desmontagem, openProblems, notices, activity, roster, pendingInvites, nextAccepted] = await Promise.all([
     getProgress("montagem", service?.id ?? null),
     getProgress("desmontagem", service?.id ?? null),
     getProblems({ onlyOpen: true, limit: 3 }),
     getNotices(1),
     getActivities(6),
     service ? getRoster(service.id) : Promise.resolve([]),
+    countMyPending(user.id),
+    getMyNextAccepted(user.id),
   ]);
+  // Voluntários só abrem culto aos domingos e quintas; a gestão abre em qualquer dia.
+  const today = todayISO();
+  const podeAbrir = gestao || isCultoDay(today);
+  const proximoCulto = nextDatesOn(DIAS_DE_CULTO, 1, today)[0];
   const me = roster.find((r) => r.userId === user.id);
   const defaultFunction = user.defaultFunction ?? FUNCOES[0];
   const notice = notices[0];
@@ -38,7 +46,10 @@ export default async function Painel() {
 
   let summary: string;
   let next: { href: string; label: string } | null = null;
-  if (!service) summary = "Nenhum culto aberto. Abra o culto de hoje para começar a montagem.";
+  if (!service)
+    summary = podeAbrir
+      ? "Nenhum culto aberto. Abra o culto de hoje para começar a montagem."
+      : `Hoje é ${weekdayName(today)}. Os cultos são abertos aos ${DIAS_DE_CULTO_TEXTO}.`;
   else if (montagem.pct < 100) {
     const faltam = montagem.total - montagem.completed;
     summary = montagem.completed === 0 ? "A montagem ainda não começou." : `A montagem está em andamento. ${faltam === 1 ? "Falta 1 etapa" : `Faltam ${faltam} etapas`} para a rádio ficar pronta.`;
@@ -82,13 +93,59 @@ export default async function Painel() {
             </div>
           ) : (
             <div className="w-full lg:w-[380px]">
-              <OpenServiceForm nowLabel={`${serviceDate(todayISO())}, ${clockNow().replace(":", "h")}`} defaultFunction={defaultFunction} />
+              {podeAbrir ? (
+                <OpenServiceForm
+                  nowLabel={`${serviceDate(today)}, ${clockNow().replace(":", "h")}`}
+                  defaultFunction={defaultFunction}
+                  defaultTitle={TITULO_POR_DIA[weekdayOf(today)] ?? "Culto"}
+                  gestao={gestao}
+                  foraDoDia={!isCultoDay(today)}
+                />
+              ) : (
+                <div className="flex gap-4 rounded-2xl bg-card p-5 text-card-foreground sm:p-6">
+                  <CalendarClock className="mt-0.5 size-5 shrink-0 text-brand-text" />
+                  <div>
+                    <p className="text-[11px] font-bold tracking-eyebrow text-brand-text uppercase">Hoje não tem culto</p>
+                    <p className="mt-1.5 text-[15px] leading-relaxed">
+                      Voluntários abrem o culto aos <strong>{DIAS_DE_CULTO_TEXTO}</strong>. Próximo culto: <strong>{serviceDate(proximoCulto)}</strong>.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
       </section>
 
       <main className="mx-auto max-w-[1200px] px-5 py-10 sm:px-8 sm:py-12">
+        {(pendingInvites > 0 || nextAccepted) && (
+          <div className="mb-6 grid gap-3 sm:grid-cols-2">
+            {pendingInvites > 0 && (
+              <Link href="/escalas" className="flex items-center gap-4 rounded-2xl bg-primary p-5 text-primary-foreground transition-colors hover:bg-brand-hover">
+                <CalendarClock className="size-6 shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[15px] font-black">
+                    {pendingInvites === 1 ? "Você tem 1 escala para responder" : `Você tem ${pendingInvites} escalas para responder`}
+                  </p>
+                  <p className="text-sm text-white/85">Toque para aceitar ou recusar.</p>
+                </div>
+                <ArrowRight className="size-5 shrink-0" />
+              </Link>
+            )}
+            {nextAccepted && (
+              <Link href="/escalas" className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-colors hover:bg-muted/60">
+                <CalendarCheck className="size-6 shrink-0 text-ink" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] font-bold tracking-[0.15em] text-ink-50 uppercase">Sua próxima escala</p>
+                  <p className="text-[15px] font-bold">
+                    {serviceDate(nextAccepted.date)} · {nextAccepted.title}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{nextAccepted.function}</p>
+                </div>
+              </Link>
+            )}
+          </div>
+        )}
         {/* Grade numerada: mesmo desenho do bloco "Identidade" do site */}
         <div className="grid overflow-hidden rounded-2xl border border-line-15 bg-surface sm:grid-cols-2 xl:grid-cols-4">
           <StatusCell n="01" href="/checklist/montagem" title="Montagem" progress={montagem} active={!!service} />
@@ -132,11 +189,11 @@ export default async function Painel() {
             <ActivityList items={activity} />
           </Panel>
           <Panel className="self-start">
-            <PanelHeader kicker="Escala de hoje" action={me ? <LeaveRoster /> : undefined} />
+            <PanelHeader kicker="Escala de hoje" action={me && gestao ? <LeaveRoster /> : undefined} />
             {!service ? (
               <p className="px-6 py-8 text-sm text-ink-50">A escala aparece quando um culto for aberto.</p>
             ) : roster.length === 0 ? (
-              <p className="px-6 py-8 text-sm text-ink-50">Ninguém na escala ainda.</p>
+              <p className="px-6 py-8 text-sm text-ink-50">Ninguém na escala ainda. Quem aceitar a escala deste culto aparece aqui.</p>
             ) : (
               roster.map((r) => (
                 <Row key={r.userId} className="items-center">
@@ -148,7 +205,7 @@ export default async function Painel() {
                 </Row>
               ))
             )}
-            {service && !me && <JoinRoster defaultFunction={defaultFunction} />}
+            {service && !me && gestao && <JoinRoster defaultFunction={defaultFunction} />}
           </Panel>
         </div>
         {service && <p className="mt-6 text-xs text-ink-35">Culto aberto {when(service.createdAt).toLowerCase()}.</p>}

@@ -27,3 +27,11 @@ export const PERFIL_LABEL: Record<Perfil, string> = {
   coordenacao: "Coordenação",
   voluntario: "Voluntário(a)",
 };
+
+/** Dias de culto (0 = domingo … 6 = sábado). Voluntários só abrem culto nesses dias; a gestão abre em qualquer dia. */
+export const DIAS_DE_CULTO = [0, 4] as const;
+export const DIAS_DE_CULTO_TEXTO = "domingos e quintas-feiras";
+/** Nome sugerido para a escala/culto conforme o dia da semana. */
+export const TITULO_POR_DIA: Partial<Record<number, string>> = { 0: "Culto de Domingo", 4: "Culto de Quinta" };
+
+export const STATUS_ESCALA = { pendente: "Aguardando resposta", aceita: "Aceita", recusada: "Recusada" } as const;
